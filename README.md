@@ -2,4 +2,4 @@
 Project start date 5/10/2024.
 Members
 -Daniel Samuel
--Remi Jacobs
+-Remi Jacobsq
