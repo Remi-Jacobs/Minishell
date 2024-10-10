@@ -3,27 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:31:30 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/09 20:12:28 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/09 22:40:27 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <string.h>
+#include "minishell.h"
 
 void	cmd_echo(char **args)
 {
-	int	newline;
+	int	new_line;
 	int	i;
 
-	newline = 1;
+	new_line = 1;
 	i = 1;
-	// replace with ft_strcmp in libft
-	if (args[1] && strcmp(args[1], "-n") == 0)
+
+	if (args[1] && ft_strcmp(args[1], "-n") == 0)
 	{
-		newline = 0;
+		new_line = 0;
 		i = 2;
 	}
 	while (args[i])
@@ -33,13 +32,6 @@ void	cmd_echo(char **args)
 			printf(" ");
 		i++;
 	}
-	if (newline)
+	if (new_line)
 		printf("\n");
 }
-
-
-// int	main (int ac, char **argv)
-// {
-// 	cmd_echo(argv);
-// 	return (0);
-// }

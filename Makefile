@@ -6,7 +6,7 @@
 #    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/10/09 20:52:34 by dsamuel          ###   ########.fr        #
+#    Updated: 2024/10/09 22:35:04 by dsamuel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -I includes/ -I libft/includes/
+CFLAGS = -Wall -Wextra -Werror -I include/ -I libft/includes/
 
 LIBFT = -L libft -lft
 
@@ -77,8 +77,5 @@ re: fclean all
 
 test: all
 	./minishell
-
-norm:
-	norminette $(SRC) includes/$(HEADER)
 
 .PHONY: clean fclean re test norm

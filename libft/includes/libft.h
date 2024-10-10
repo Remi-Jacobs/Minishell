@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:14:12 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/09/10 11:49:51 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/09 22:37:25 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t max_len);
 int		ft_atoi(const char *str);
+int		ft_strcmp(const char *s1, const char *s2);
 
 /****** Functions Part 1 with malloc() ******/
 
