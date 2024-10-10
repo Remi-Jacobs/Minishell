@@ -6,14 +6,16 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/09 21:02:25 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/09 22:45:20 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	main(int ac, char **av, char **env)
+
+#include "minishell.h"
+
+int	main(int argc, char **argv)
 {
-	(void)ac;
-	(void)av;
-	(void)env;
+	if (argc > 1)
+		cmd_echo(argv);
 	return (0);
 }
