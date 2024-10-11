@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/10 19:13:36 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/11 21:22:52 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 # define ERROR 1
 # define SUCCESS 0
 # define IS_DIRECTORY 126
-# define UNKNOWN_COMMAND 127
+# define UNKNOWN_CMD 127
 
 /*
 ** Structure for storing a command token (e.g., a command, argument, pipe, etc.).
@@ -64,7 +64,7 @@ typedef struct s_cmd_token
 {
 	char				*content;
 	int					type;
-	struct s_cmd_token	*previous;
+	struct s_cmd_token	*prev;
 	struct s_cmd_token	*next;
 }					t_cmd_token;
 
@@ -155,5 +155,21 @@ void	cmd_echo(char **args);
 /*
 ** PARSING
 */
+
+/*
+** SIGNALS HANDLING
+*/
+void	*ft_memdel(void *ptr); // remember to move to libft
+void	ft_signal_int(int signal);
+void	ft_signal_exit(int signal);
+void	ft_sig_init(void);
+
+/*
+** External functions
+*/
+extern t_sig_handler global_sig;
+
+
+
 
 #endif
