@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/11 21:00:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/11 21:26:34 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*ft_memdel(void *ptr)
  * @param signal The signal number (typically SIGINT).
  *               This parameter is unused but included for compatibility.
  */
-void	ft_signal_init(int signal)
+void	ft_sig_integer(int signal)
 {
 	(void)signal;
 	if (global_sig.child_proc_id == 0)
@@ -94,7 +94,7 @@ void	ft_signal_init(int signal)
  *
  * @param signal The signal number (typically SIGQUIT).
  */
-void	ft_signal_exit(int signal)
+void	ft_sig_exit(int signal)
 {
 	char	*nbr;
 
@@ -109,4 +109,20 @@ void	ft_signal_exit(int signal)
 	else
 		ft_putstr_fd("\b\b  \b\b", STDERR);
 	ft_memdel(nbr);
+}
+
+/**
+ * @brief Initializes the signal handlers for the minishell.
+ *
+ * This function sets up the signal handlers for the minishell to handle
+ * SIGINT (Ctrl+C) and SIGQUIT (Ctrl+\) signals. It uses the `signal` function
+ * to register the signal handlers `ft_signal_init` and `ft_signal_exit`
+ * for the respective signals.
+ */
+void	ft_sig_init(void)
+{
+	global_sig.sigint_received = 0;
+	global_sig.sigquit_received = 0;
+	global_sig.last_exit_stat = 0;
+	global_sig.child_proc_id = 0;
 }

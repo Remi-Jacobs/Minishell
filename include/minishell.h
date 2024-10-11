@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/11 21:22:52 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/11 21:27:51 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,8 @@ void	cmd_echo(char **args);
 ** SIGNALS HANDLING
 */
 void	*ft_memdel(void *ptr); // remember to move to libft
-void	ft_signal_int(int signal);
-void	ft_signal_exit(int signal);
+void	ft_sig_integer(int signal);
+void	ft_sig_exit(int signal);
 void	ft_sig_init(void);
 
 /*
