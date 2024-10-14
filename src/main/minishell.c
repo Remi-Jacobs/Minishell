@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/14 15:46:39 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/14 15:47:15 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,4 +180,76 @@ void ft_minishell(t_shell_state *shell_state)
         shell_state->should_skip_exec = 0;
         cmd_token = ft_next_exec(cmd_token->next, NOSKIP);
     }
+}
+
+
+/**
+ * @file minishell.c
+ * @brief Main entry point for the custom minishell implementation.
+ *
+ * This function sets up the initial shell state and manages the interactive 
+ * loop of the shell, allowing the user to input commands, parse them, 
+ * and execute them. It also handles environment initialization, signal handling, 
+ * and cleanup upon exit.
+ *
+ * The shell uses the following workflow:
+ * 1. Initializes file descriptors for input and output.
+ * 2. Sets up environment variables and increments the shell level.
+ * 3. Enters a loop that continues until the `exit` command is issued.
+ *    - In each iteration, it resets signal handlers and parses the user's input.
+ *    - If the parsed input is valid, it calls `minishell` to execute the commands.
+ *    - Frees any tokens after command execution to prevent memory leaks.
+ * 4. When the loop ends, it frees all allocated environment variables and 
+ *    returns the last command's exit status.
+ *
+ * @param ac Argument count (unused).
+ * @param av Argument vector (unused).
+ * @param env Environment variables passed to the shell at startup.
+ * @return int Returns the last executed command's exit status.
+ */
+
+int	main(int argc, char **argv, char **envp)
+{
+    t_shell_state mini_shell;
+
+    (void)argc;
+	(void)argv;
+    // Duplicate the standard input and output file descriptors to preserve them
+    mini_shell.stdin_fd = dup(STDIN);
+	mini_shell.stdout_fd = dup(STDOUT);
+    // Initialize shell control variables
+    mini_shell.should_exit = 0;  // Flag to control shell exit state
+    mini_shell.return_code = 0;     // Store the return status of the last executed command
+    mini_shell.should_skip_exec = 0;// Flag to indicate if commands should be executed
+
+    // Reset standard file descriptors to their initial state
+    ft_reset_fds(&mini_shell);
+    // Initialize environment variables and increment the shell level (SHLVL)
+    ft_env_init(&mini_shell, envp);
+	ft_secret_env_init(&mini_shell, envp);
+    ft_increment_shell_level(mini_shell.active_env);
+
+    // Main interactive loop - continues until `mini.exit` is set to non-zero
+    while (mini_shell.should_exit == 0)
+    {
+        // Set up signal handling (e.g., for Ctrl+C or Ctrl+\)
+        ft_sig_init();
+        // Parse user input into command tokens
+        ft_parse_input(&mini_shell);
+        // Check if parsing succeeded and the input line is valid
+        if (mini_shell.cmd_list != NULL && ft_check_line(&mini_shell, mini_shell.cmd_list))
+		{
+			// Execute the parsed commands
+			ft_mini_shell(&mini_shell);
+		}
+        // Free the memory allocated for tokens after processing
+        ft_free_token(&mini_shell.cmd_list);
+    }
+
+    // Free all allocated environment variables before exiting
+    ft_free_env(mini_shell.active_env);
+    ft_free_env(mini_shell.secret_env);
+
+    // Return the exit status of the last executed command
+    return (mini_shell.return_code);
 }
