@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/14 15:44:59 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/14 15:46:39 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,3 +108,76 @@ void ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
         ft_exec_cmd(shell_state, cmd_token);
 }
 
+/**
+ * @brief Main execution loop for processing and running commands in `minishell`.
+ *
+ * This function iteratively processes parsed command tokens, handles redirections,
+ * and executes each command while maintaining the shell's state. It manages
+ * input/output redirections, waits for child processes to finish, and updates
+ * the return status of the shell based on the executed commands.
+ *
+ * Workflow:
+ * 1. Determine the first executable token from the parsed input.
+ * 2. Iterate over tokens while the shell is active (`mini->exit == 0`).
+ *    - Set up shell state flags (`charge`, `parent`, `last`) for each command.
+ *    - Call `redir_and_exec()` to handle redirections and execute the command.
+ *    - Restore standard input/output and close any used file descriptors.
+ *    - Wait for child processes using `waitpid()` and retrieve their status.
+ *    - Update the shell's return status (`mini->ret`) based on the command's outcome.
+ *    - If the current process is a child (`mini->parent == 0`), clean up and exit.
+ *    - Move to the next executable token and reset the `no_exec` flag.
+ * 3. Repeat until all tokens are processed or the shell is set to exit.
+ *
+ * @param mini A pointer to the `t_mini` structure, which holds the current
+ *             shell state, including environment variables, file descriptors,
+ *             and command tokens.
+ */
+void ft_minishell(t_shell_state *shell_state)
+{
+    t_cmd_token *cmd_token;
+    int     status;
+    
+
+    // Get the first executable token and adjust if necessary.
+    cmd_token = ft_next_exec(shell_state->cmd_list, NOSKIP);
+    if(is_types(shell_state->cmd_list, "TAI"))
+        cmd_token = shell_state->cmd_list->next;
+    else
+        cmd_token = cmd_token;
+    // Main loop: Process tokens until `mini->exit` is set to non-zero.
+    while (shell_state->should_exit == 0 && cmd_token)
+    {
+        // Set flags for command execution.
+        shell_state->is_foreground = 1;   // Indicate that the current process is active.
+        shell_state->is_parent_proc = 1;   // Set to 1 to denote that the process is the parent.
+        shell_state->last_exit_stat = 1;     // Indicates that the command is the last executed.
+
+        // Handle redirections and execute the command.
+        ft_redir_and_exec(shell_state, cmd_token);
+
+        // Restore standard I/O, close, and reset file descriptors.
+        ft_reset_std(shell_state);
+        ft_close_fds(shell_state);
+        ft_reset_fds(shell_state);
+
+        // Wait for child processes and retrieve their exit status.
+        waitpid(-1, &status, 0);
+        status = WEXITSTATUS(status);
+        // Update return status based on the last executed command.
+        if(shell_state->last_exit_stat == 0)
+            shell_state->return_code = status;
+        else
+            shell_state->return_code = shell_state->last_exit_stat;
+        // If this is a child process, clean up and exit.
+        if (shell_state->is_parent_proc == 0)
+        {
+            ft_free_token(cmd_token);
+            exit(shell_state->return_code);
+        }
+        
+
+        // Reset execution flag and proceed to the next token.
+        shell_state->should_skip_exec = 0;
+        cmd_token = ft_next_exec(cmd_token->next, NOSKIP);
+    }
+}
