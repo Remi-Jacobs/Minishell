@@ -6,20 +6,11 @@
 /*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/12 18:52:33 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/21 18:00:33 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-typedef struct token {
-	char **cmd:
-	char *args
-	int pipe 
-	char *infile;
-	char outfile;
-	int herdoc;
-}
 
 void	*ft_memdel(void *ptr)
 {

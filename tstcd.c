@@ -1,16 +1,141 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 19:44:43 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/21 23:04:34 by ojacobs          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "minishell.h" 
 
-#include "minishell.h"
+
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
+}
+
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+void	ft_putendl_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
+	write(fd, "\n", 1);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	if (n == 0)
+		return (0);
+	i = 0;
+	while (i < n && s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	if (i < n)
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	}
+	return (0);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strdup(const char *src)
+{
+	size_t	len;
+	char	*dst;
+	size_t	i;
+
+	len = ft_strlen(src);
+	dst = (char *)malloc((len + 1) * sizeof(char));
+	if (dst == NULL)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[len] = '\0';
+	return (dst);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*new_str;
+	int		i;
+	int		j;
+
+	new_str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!s1 || !s2 || !new_str)
+		return (0);
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		new_str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j] != '\0')
+	{
+		new_str[i] = s2[j];
+		i++;
+		j++;
+	}
+	new_str[i] = '\0';
+	return (new_str);
+}
+
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] == s2[i])
+	{
+		if (s1[i] == '\0' && s2[i] == '\0')
+			return (0);
+		i++;
+	}
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+void	*ft_memdel(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+	return (NULL);
+}
+
 
 static void	ft_print_error(char **args)
 {
