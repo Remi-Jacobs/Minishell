@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 19:44:43 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/21 23:04:34 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:11:49 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static  char  *ft_get_env_path(t_env_variable *env, const char *var, size_t len)
 	int j;
 	int s_alloc;
 
-	while (env && env-env->next)
+	while (env && env->next != NULL)
 	{
 		if (ft_strncmp(env->variable, var, len) == 0)
 		{
@@ -54,81 +54,6 @@ static  char  *ft_get_env_path(t_env_variable *env, const char *var, size_t len)
 	return (NULL);
 }
 
-char		*ft_get_env_name(char *dest, const char *src)
-{
-	int		i;
-
-	i = 0;
-	while (src[i] && src[i] != '=' && ft_strlen(src) < BUFF_SIZE)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-
-int			ft_is_in_env(t_env_variable *env, char *args)
-{
-	char	var_name[BUFF_SIZE];
-	char	env_name[BUFF_SIZE];
-
-	ft_get_env_name(var_name, args);
-	while (env && env->next)
-	{
-		ft_get_env_name(env_name, env->variable);
-		if (ft_strcmp(var_name, env_name) == 0)
-		{
-			ft_memdel(env->variable);
-			env->variable = ft_strdup(args);
-			return (1);
-		}
-		env = env->next;
-	}
-	return (SUCCESS);
-}
-
-//This will update the env seperate from and more appropraitely how ft_add_to_env would have handled it.
-int ft_env_update(const char *args, t_env_variable *env)
-{
-    t_env_variable	*new_env;
-    t_env_variable	*current;
-    char			var_name[BUFF_SIZE];
-    char			env_name[BUFF_SIZE];
-
-    // Extract the variable name from the provided args (before '=')
-    ft_get_env_name(var_name, args);
-
-    // Iterate through the environment list to check for an existing variable
-    current = env;
-    while (current)
-    {
-        ft_get_env_name(env_name, current->variable);
-        if (ft_strcmp(var_name, env_name) == 0)  // If variable exists, update it
-        {
-            ft_memdel(current->variable);  // Free the old variable
-            current->variable = ft_strdup(args);  // Update with new value
-            return (SUCCESS);
-        }
-        current = current->next;
-    }
-
-    // If the variable does not exist, create a new one and add it to the end
-    if (!(new_env = (t_env_variable *)malloc(sizeof(t_env_variable))))
-        return (-1);
-    new_env->variable = ft_strdup(args);
-    new_env->next = NULL;
-
-    // Find the end of the list to append the new variable
-    current = env;
-    while (current->next)
-        current = current->next;
-    current->next = new_env;
-
-    return (SUCCESS);
-}
-
 static int ft_update_old_pwd(t_env_variable *env)
 {
 	char	cwd[PATH_MAX];
@@ -139,7 +64,7 @@ static int ft_update_old_pwd(t_env_variable *env)
 	if (!(old_pwd = ft_strjoin("OLDPWD=", cwd)))
 		return (ERROR);
 	if (ft_is_in_env(env, old_pwd) == SUCCESS)
-		ft_env_update(old_pwd, env);
+		ft_add_to_env(old_pwd, env);
 	ft_memdel(old_pwd);
 	return (SUCCESS);
 }

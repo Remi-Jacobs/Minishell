@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/16 22:09:18 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:41:36 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,36 @@ typedef struct s_expand_data
 /*
 ** BUILTINS
 */
-int	ft_echo(char **args);
-//void	cmd_echo(char **args);
+int		ft_cd(char **args, t_env_variable *env);
+int		ft_echo(char **args);
+int		ft_env(t_env_variable *env);
+void	ft_mini_exit(t_shell_state *shell_state, char **cmd_args);
+int		ft_add_to_env(const char *args, t_env_variable *env);
+char	*ft_get_env_name(char *dest, const char *src);
+int		ft_is_in_env(t_env_variable *env, char *args);
+int		ft_export(char **args, t_env_variable *env, t_env_variable *secret);
+int		ft_pwd(void);
+int		ft_unset(char **args, t_shell_state *state);
+
 /*
 ** PARSING
 */
 
+/*
+** ENVIRONMENT
+*/
+size_t	ft_size_env(t_env_variable *lst);
+char	*ft_env_to_str(t_env_variable *lst);
+int		ft_env_init(t_shell_state *shell_state, char **env_array);
+int		ft_secret_env_init(t_shell_state *shell_state, char **env_array);
+int		is_env_char(int c);
+int		ft_is_valid_env(const char *env);
+int		ft_env_value_len(const char *env);
+char	*ft_env_value(char *env);
+char	*ft_get_env_value(char *arg, t_env_variable *env);
+int		ft_str_env_len(char **env);
+void	ft_sort_env(char **tab, int env_len);
+void	ft_print_sorted_env(t_env_variable *env);
 /*
 ** SIGNALS HANDLING
 */
@@ -166,11 +190,15 @@ void	ft_sig_exit(int signal);
 void	ft_sig_init(void);
 
 /*
+** UTILS
+*/
+void	ft_free_token(t_cmd_token *start);
+void	ft_free_env(t_env_variable *env);
+void	ft_free_tab(char **tab);
+
+/*
 ** External functions
 */
 extern t_sig_handler global_sig;
-
-
-
 
 #endif

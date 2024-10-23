@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:14:12 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/09 22:37:25 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:46:56 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t max_len);
 int		ft_atoi(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
+void	*ft_memdel(void *ptr);
+int		ft_strisnum(const char *str);
 
 /****** Functions Part 1 with malloc() ******/
 
@@ -76,6 +78,8 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_putstr_fd(char *s, int fd);
+void	ft_putendl(char *s);
+void	ft_putstr(char *s);
 
 /****** Bonus Functions Part ******/
 
@@ -91,5 +95,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 /****** Additional Functions Part 2 with malloc() ******/
 char	*get_next_line(int fd);
+void	ft_skip_spacenl(const char *str, int *i);
 
 #endif
