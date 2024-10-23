@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:15:58 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 15:54:53 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:35:47 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * Return:
  * - The number of strings (environment variables) in the array.
  */
-int str_env_len(char **env)
+int ft_str_env_len(char **env)
 {
     int i;
 
@@ -46,7 +46,7 @@ int str_env_len(char **env)
  * Return:
  * - This function does not return a value.
  */
-void sort_env(char **tab, int env_len)
+void ft_sort_env(char **tab, int env_len)
 {
     int ordered;
     int i;
@@ -91,16 +91,16 @@ void sort_env(char **tab, int env_len)
  * Return:
  * - This function does not return a value.
  */
-void print_sorted_env(t_env_variable *env)
+void ft_print_sorted_env(t_env_variable *env)
 {
     int i;
     char **tab;
     char *str_env;
 
-    str_env = env_to_str(env);
+    str_env = ft_env_to_str(env);
     tab = ft_split(str_env, '\n');
     ft_memdel(str_env);
-    sort_env(tab, str_env_len(tab));
+    ft_sort_env(tab, ft_str_env_len(tab));
     i = 0;
     while (tab[i])
     {
@@ -108,5 +108,5 @@ void print_sorted_env(t_env_variable *env)
         ft_putendl(tab[i]);
         i++;
     }
-    free_tab(tab);
+    ft_free_tab(tab);
 }

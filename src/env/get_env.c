@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:58:58 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 16:00:38 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:28:14 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int is_env_char(int c)
  * - 2 if the name is valid but doesn't have an equal sign (`=`) at the end.
  * - 1 if the name is valid and contains an equal sign (`=`).
  */
-int is_valid_env(const char *env)
+int ft_is_valid_env(const char *env)
 {
     int i;
 
@@ -77,7 +77,7 @@ int is_valid_env(const char *env)
  * Return:
  * - The length of the environment variable's value (excluding the equal sign).
  */
-int env_value_len(const char *env)
+int ft_env_value_len(const char *env)
 {
     int i;
     int size_name;
@@ -108,14 +108,14 @@ int env_value_len(const char *env)
  * - A pointer to the newly allocated string containing the value.
  * - NULL if memory allocation fails.
  */
-char *env_value(char *env)
+char *ft_env_value(char *env)
 {
     int i;
     int j;
     int size_alloc;
     char *env_value;
 
-    size_alloc = env_value_len(env) + 1;
+    size_alloc = ft_env_value_len(env) + 1;
     if (!(env_value = malloc(sizeof(char) * size_alloc)))
         return (NULL);
     i = 0;
@@ -143,7 +143,7 @@ char *env_value(char *env)
  * - A pointer to a newly allocated string containing the value of the environment variable, if found.
  * - An empty string if the environment variable is not found.
  */
-char *get_env_value(char *arg, t_env_variable *env)
+char *ft_get_env_value(char *arg, t_env_variable *env)
 {
     char env_name[BUFF_SIZE];
     char *env_val;
@@ -151,11 +151,11 @@ char *get_env_value(char *arg, t_env_variable *env)
     env_val = ft_strdup("");
     while (env && env->variable)
     {
-        get_env_name(env_name, env->variable);
+        ft_get_env_name(env_name, env->variable);
         if (ft_strcmp(arg, env_name) == 0)
         {
             ft_memdel(env_val);
-            env_val = env_value(env->variable);
+            env_val = ft_env_value(env->variable);
             return (env_val);
         }
         env = env->next;

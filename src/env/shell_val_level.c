@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:09:54 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 15:50:03 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:34:16 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  * - 1 if the string contains a non-numeric character (invalid level).
  * - 0 if the string contains only numeric characters (valid level).
  */
-static int invalid_lvl(const char *str)
+static int ft_invalid_lvl(const char *str)
 {
     int i;
 
@@ -54,15 +54,7 @@ static int invalid_lvl(const char *str)
  * - 0 if the level is invalid.
  */
 
-void	ft_skip_spacenl(const char *str, int *i) // remember to move to libft seems to be a helper function
-{
-	while ((str[*i] == ' ' || str[*i] == '\t' || str[*i] == '\n')
-	|| (str[*i] == '\r' || str[*i] == '\v' || str[*i] == '\f'))
-		(*i)++;
-}
-
-
-static int get_lvl(const char *str)
+static int ft_get_lvl(const char *str)
 {
     int i;
     int sign;
@@ -72,7 +64,7 @@ static int get_lvl(const char *str)
     sign = 1;
     num = 0;
     ft_skip_spacenl(str, &i);
-    if (invalid_lvl(str))
+    if (ft_invalid_lvl(str))
         return (0);
     if (str[i] == '-')
         sign = -1;
@@ -112,14 +104,14 @@ void increment_shell_level(t_env_variable *env)
     char *shlvl;
     char *shell_level_value;
 
-    shell_level_value = get_env_value("SHLVL", env);
+    shell_level_value = ft_get_env_value("SHLVL", env);
     if (ft_strcmp(shell_level_value, "") == 0)
         return;
-    shell_level = get_lvl(shell_level_value) + 1;
+    shell_level = ft_get_lvl(shell_level_value) + 1;
     ft_memdel(shell_level_value);
     while (env && env->next)
     {
-        get_env_name(env_name, env->variable);
+        ft_get_env_name(env_name, env->variable);
         if (ft_strcmp("SHLVL", env_name) == 0)
         {
             ft_memdel(env->variable);

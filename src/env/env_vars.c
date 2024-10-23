@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:16:19 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 15:25:08 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/22 18:54:36 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * Return:
  * - The total length of all environment variable values in the list.
  */
-size_t size_env(t_env_variable *lst)
+size_t ft_size_env(t_env_variable *lst)
 {
     size_t lst_len;
 
@@ -54,13 +54,13 @@ size_t size_env(t_env_variable *lst)
  * - A pointer to the newly allocated string containing all environment variables separated by newlines.
  * - NULL if memory allocation fails.
  */
-char *env_to_str(t_env_variable *lst)
+char *ft_env_to_str(t_env_variable *lst)
 {
     char *env;
     int i;
     int j;
 
-    if (!(env = malloc(sizeof(char) * size_env(lst) + 1)))
+    if (!(env = malloc(sizeof(char) * ft_size_env(lst) + 1)))
         return (NULL);
     i = 0;
     while (lst && lst->next != NULL)
@@ -96,7 +96,7 @@ char *env_to_str(t_env_variable *lst)
  * - 0 if the initialization is successful.
  * - 1 if memory allocation fails.
  */
-int env_init(t_shell_state *shell_state, char **env_array)
+int ft_env_init(t_shell_state *shell_state, char **env_array)
 {
     t_env_variable *env;
     t_env_variable *new;
@@ -134,7 +134,7 @@ int env_init(t_shell_state *shell_state, char **env_array)
  * - 0 if the initialization is successful.
  * - 1 if memory allocation fails.
  */
-int secret_env_init(t_shell_state *shell_state, char **env_array)
+int ft_secret_env_init(t_shell_state *shell_state, char **env_array)
 {
     t_env_variable *env;
     t_env_variable *new;
