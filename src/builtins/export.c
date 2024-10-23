@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 16:04:46 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/18 16:05:24 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/22 19:30:06 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*ft_get_env_name(char *dest, const char *src);
-int			ft_is_in_env(t_env_variable *env, char *args);
-static int ft_print_error_export(int return_err, const char *arg)
+static int ft_print_err_export(int return_err, const char *arg)
 {
 	int i;
 	if (return_err == -1)
@@ -30,6 +28,7 @@ static int ft_print_error_export(int return_err, const char *arg)
 	write(STDERR, "\n", 1);
 	return (ERROR);
 }
+
 int ft_add_to_env(const char *args, t_env_variable *env)
 {
 	t_env_variable	*new_env;
@@ -49,27 +48,42 @@ int ft_add_to_env(const char *args, t_env_variable *env)
 	new_env->next = tmp;
 	return (SUCCESS);
 }
-//this was another way I thought I could achieve ft_add_to_env not totally discarded which ever way you choose to achieve you comment this code and leave it in case we start debugiing i can remember some concept I why i did this
-// int ft_add_to_env(char *args, t_env_variable *env)
-// {
-// 	t_env_variable	*new_env;
-// 	t_env_variable	*tmp;
-// 	new_env = (t_env_variable *)malloc(sizeof(t_env_variable));
-// 	if (!new_env)
-// 		return (ERROR);
-// 	new_env->variable = ft_strdup(args);
-// 	new_env->next = NULL;
-// 	if (!env)
-// 	{
-// 		env = new_env;
-// 		return (SUCCESS);
-// 	}
-// 	tmp = env;
-// 	while (tmp->next)
-// 		tmp = tmp->next;
-// 	tmp->next = new_env;
-// 	return (SUCCESS);
-// }
+
+char		*ft_get_env_name(char *dest, const char *src)
+{
+	int		i;
+
+	i = 0;
+	while (src[i] && src[i] != '=' && ft_strlen(src) < BUFF_SIZE)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+int			ft_is_in_env(t_env_variable *env, char *args)
+{
+	char	var_name[BUFF_SIZE];
+	char	env_name[BUFF_SIZE];
+
+	ft_get_env_name(var_name, args);
+	while (env && env->next)
+	{
+		ft_get_env_name(env_name, env->variable);
+		if (ft_strcmp(var_name, env_name) == 0)
+		{
+			ft_memdel(env->variable);
+			env->variable = ft_strdup(args);
+			return (1);
+		}
+		env = env->next;
+	}
+	return (SUCCESS);
+}
+
+
 int	ft_export(char **args, t_env_variable *env, t_env_variable *secret)
 {
 	int	new_env;
