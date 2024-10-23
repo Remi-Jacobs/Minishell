@@ -6,7 +6,7 @@
 #    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/10/09 22:35:04 by dsamuel          ###   ########.fr        #
+#    Updated: 2024/10/22 20:34:06 by dsamuel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,15 +22,15 @@ HEADER = minishell.h
 
 BUILTINS = cd echo env exit export pwd unset
 
-ENV = env_utils env_vars
+ENV = env_vars get_env shell_val_level sort_env
 
-EXECUTOR = command executor pipeline
+EXECUTOR = command executor builtin
 
 MAIN = minishell redirections
 
 PARSER = parser tokenizer
 
-UTILS = memory utils
+UTILS = expansion free fd parsing token type
 
 SIGNALS = signals
 
