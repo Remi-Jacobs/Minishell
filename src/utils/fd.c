@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 17:36:33 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 19:14:38 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 22:17:30 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void ft_close(int fd)
  * to their original values stored in the `mini` structure. It uses `dup2()` to duplicate the stored 
  * descriptors (`mini->in` and `mini->out`) into the standard input and output descriptors.
  */
-void reset_std(t_shell_state *shell_state)
+void ft_reset_std(t_shell_state *shell_state)
 {
     dup2(shell_state->stdin_fd, STDIN);
     dup2(shell_state->stdout_fd, STDOUT);
@@ -51,7 +51,7 @@ void reset_std(t_shell_state *shell_state)
  * including `fdin`, `fdout`, `pipin`, and `pipout`. It ensures that all open file descriptors are 
  * properly closed to prevent resource leaks.
  */
-void close_fds(t_shell_state *shell_state)
+void ft_close_fds(t_shell_state *shell_state)
 {
     ft_close(shell_state->input_fd);
     ft_close(shell_state->output_fd);
@@ -68,7 +68,7 @@ void close_fds(t_shell_state *shell_state)
  * to `-1`, indicating that they are uninitialized or closed. It also sets the process ID (`pid`) to `-1`.
  * This helps to indicate that these resources are not currently in use.
  */
-void reset_fds(t_shell_state *shell_state)
+void ft_reset_fds(t_shell_state *shell_state)
 {
     shell_state->input_fd = -1;
     shell_state->output_fd = -1;

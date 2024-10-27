@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/14 15:47:15 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:09:26 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ void ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
 
     // Handle output truncation, output append, input redirection, or pipe setup.
     if (is_type(prev, TRUNC))
-        ft_redir(shell_state, cmd_token, TRUNC);
+        ft_redir_output(shell_state, cmd_token, TRUNC);
     else if (is_type(prev, APPEND))
-        ft_redir(shell_state, cmd_token, APPEND);
+        ft_redir_output(shell_state, cmd_token, APPEND);
     else if (is_type(prev, INPUT))
-        ft_input(shell_state, cmd_token);
+        ft_redir_input(shell_state, cmd_token);
     else if (is_type(prev, PIPE))
         pipe = ft_minipipe(shell_state);
 
@@ -139,7 +139,8 @@ void ft_minishell(t_shell_state *shell_state)
     
 
     // Get the first executable token and adjust if necessary.
-    cmd_token = ft_next_exec(shell_state->cmd_list, NOSKIP);
+    // cmd_token = ft_next_exec(shell_state->cmd_list, NOSKIP);
+    cmd_token = ft_next_sep(shell_state->cmd_list, NOSKIP);
     if(is_types(shell_state->cmd_list, "TAI"))
         cmd_token = shell_state->cmd_list->next;
     else
@@ -178,7 +179,8 @@ void ft_minishell(t_shell_state *shell_state)
 
         // Reset execution flag and proceed to the next token.
         shell_state->should_skip_exec = 0;
-        cmd_token = ft_next_exec(cmd_token->next, NOSKIP);
+        // cmd_token = ft_next_exec(cmd_token->next, NOSKIP);
+        cmd_token = ft_next_sep(cmd_token->next, NOSKIP);
     }
 }
 
@@ -240,10 +242,10 @@ int	main(int argc, char **argv, char **envp)
         if (mini_shell.cmd_list != NULL && ft_check_line(&mini_shell, mini_shell.cmd_list))
 		{
 			// Execute the parsed commands
-			ft_mini_shell(&mini_shell);
+			ft_minishell(&mini_shell);
 		}
         // Free the memory allocated for tokens after processing
-        ft_free_token(&mini_shell.cmd_list);
+        ft_free_token(mini_shell.cmd_list);
     }
 
     // Free all allocated environment variables before exiting

@@ -6,7 +6,7 @@
 /*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 15:28:09 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/24 17:42:13 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:16:37 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 // Duplicate the output file descriptor (shell_state->output_fd) to STDOUT.
 
 
-void	redir_output(t_shell_state *shell_state, t_cmd_token *token, int type)
+void	ft_redir_output(t_shell_state *shell_state, t_cmd_token *token, int type)
 {
     int new_fd;
 
@@ -112,7 +112,7 @@ void	redir_output(t_shell_state *shell_state, t_cmd_token *token, int type)
 // Exit the function.
 // Duplicate the input file descriptor (shell->input_fd) to STDIN.
 
-void	redir_input(t_shell_state *shell_state, t_cmd_token *token)
+void	ft_redir_input(t_shell_state *shell_state, t_cmd_token *token)
 {
     int new_fd;
 
@@ -190,7 +190,7 @@ void	redir_input(t_shell_state *shell_state, t_cmd_token *token)
 
 
 // Main minipipe function
-int	minipipe(t_shell_state *shell_state)
+int	ft_minipipe(t_shell_state *shell_state)
 {
     int pipefd[2];
     pid_t pid;
@@ -219,19 +219,19 @@ int ft_redir_iop(char *ops, t_shell_state *shell_state, t_cmd_token *token)
     if (ft_strcmp(ops, ">") == 0)
     {
         type = TRUNC;
-        return redir(shell_state, token, type);
+        return (ft_redir_output(shell_state, token, type), 0);
     }
     else if (ft_strcmp(ops, ">>") == 0)
     {
         type = APPEND;
-        return redir(shell_state, token, type);
+        return (ft_redir_output(shell_state, token, type),0);
     }
     // Handle input redirection with "<"
     else if (ft_strcmp(ops, "<") == 0)
-        return input(shell_state, token);
+        return (ft_redir_input(shell_state, token),0);
     // Handle piping with "|"
     else if (ft_strcmp(ops, "|") == 0)
-        return minipipe(shell_state);
+        return ft_minipipe(shell_state);
     else
     {
         // If the operation is not recognized, print an error

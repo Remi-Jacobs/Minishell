@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_val_level.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:09:54 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 19:34:16 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:09:58 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ static int ft_get_lvl(const char *str)
  * Return:
  * - This function does not return a value.
  */
-void increment_shell_level(t_env_variable *env)
+void ft_increment_shell_level(t_env_variable *env)
 {
     int shell_level;
     char env_name[BUFF_SIZE];

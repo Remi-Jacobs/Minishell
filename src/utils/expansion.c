@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 17:24:43 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 17:34:53 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:47:17 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int get_var_len(const char *arg, int pos, t_env_variable *env, int ret)
         i++;
     }
     var_name[i] = '\0';
-    var_value = get_env_value(var_name, env);
+    var_value = ft_get_env_value(var_name, env);
     i = ft_strlen(var_value);
     ft_memdel(var_value);
     return (i);
@@ -160,6 +160,6 @@ char *get_var_value(const char *arg, int pos, t_env_variable *env, int ret)
         i++;
     }
     var_name[i] = '\0';
-    var_value = get_env_value(var_name, env);
+    var_value = ft_get_env_value(var_name, env);
     return (var_value);
 }

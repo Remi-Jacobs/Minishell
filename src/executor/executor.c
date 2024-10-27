@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/25 00:17:41 by ojacobs           #+#    #+#             */
+/*   Updated: 2024/10/27 22:28:15 by ojacobs          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
 /**
  * cmd_tab - Creates an array of strings (command table) from a linked list of tokens.
  * 
@@ -30,6 +44,54 @@
 // Iterate through the tokens and add each token string to tab[i] while the token type is less than TRUNC.
 // Terminate the command table with a NULL pointer.
 // Return the command table.
+
+char **cmd_tab(t_cmd_token *start)
+{
+    t_cmd_token *token;
+    char **tab;
+    int i, count;
+
+    // Check if the start token is NULL
+    if (!start)
+        return NULL;
+
+    // Count the number of tokens up to a redirection or separator
+    token = start;
+    count = 1;  // Starting with the initial token
+    while (token && token->type < TRUNC)
+    {
+        count++;
+        token = token->next;
+    }
+
+    // Allocate memory for the command table (tab)
+    tab = (char **)malloc(sizeof(char *) * count);
+    if (!tab)
+        return NULL;  // Return NULL if memory allocation fails
+
+    // Assign strings to the command table
+    token = start;
+    i = 0;
+    while (token && token->type < TRUNC)
+    {
+        tab[i] = strdup(token->content);  // Copy the token content to tab[i]
+        if (!tab[i])
+        {
+            // Free any already allocated strings in case of memory failure
+            for (int j = 0; j < i; j++)
+                free(tab[j]);
+            free(tab);
+            return NULL;
+        }
+        token = token->next;
+        i++;
+    }
+
+    // Terminate the command table with a NULL pointer
+    tab[i] = NULL;
+
+    return tab;
+}
 
 /**
  * exec_cmd - Executes a command token by expanding and running the command.
@@ -64,3 +126,136 @@
 // Reset pipe-related state in the mini structure:
 // Set shell_state->pipe_input_fd and shell_state->pipe_output_fd to -1.
 // Set shell_state->is_foreground to 1.
+
+// int exec_cmd(t_shell_state *shell_state, t_cmd_token *token)
+// {
+//     char **cmd; // Command table (array of strings)
+//     int i;      // Iterator for the command table
+
+//     // Check if the shell is in the foreground
+//     if (shell_state->is_foreground == 0)
+//         return -1;
+
+//     // Convert token linked list to command table (cmd_tab)
+//     cmd = cmd_tab(token);
+//     if (!cmd)
+//         return -1; // Return in case of memory allocation failure
+
+//     // Expand environment variables in the command table
+//     i = 0;
+//     while (cmd[i])
+//     {
+//         cmd[i] = expansions(cmd[i], shell_state->active_env);
+//         i++;
+//     }
+
+//     // Check if the command is "exit" and there's no active pipe
+//     if (ft_strcmp(cmd[0], "exit") == 0 && has_pipe(token) == 0)
+//     {
+//         mini_exit(shell_state, cmd);
+//     }
+
+//     // Check if the command is a built-in command
+//     if (is_builtin(cmd[0]))
+//     {
+//         shell_state->return_code = exec_builtin(cmd, shell_state);
+//     }
+//     else
+//     {
+//         // Execute external binaries using exec_bin()
+//         shell_state->return_code = exec_bin(cmd, shell_state->active_env, shell_state);
+//     }
+
+//     // Free the command table to prevent memory leaks
+//     i = 0;
+//     while (cmd[i])
+//     {
+//         free(cmd[i]);
+//         i++;
+//     }
+//     free(cmd);
+
+//     // Close any active pipes
+//     if (shell_state->pipe_input_fd != -1)
+//         ft_close(shell_state->pipe_input_fd);
+//     if (shell_state->pipe_output_fd != -1)
+//         ft_close(shell_state->pipe_output_fd);
+
+//     // Reset pipe-related state in shell_state
+//     shell_state->pipe_input_fd = -1;
+//     shell_state->pipe_output_fd = -1;
+//     shell_state->is_foreground = 1;
+
+//     return shell_state->return_code;
+// }
+
+int ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token)
+{
+    char **cmd; // Command table (array of strings)
+    int i;      // Iterator for the command table
+
+    // Check if the shell is in the foreground
+    if (shell_state->is_foreground == 0)
+        return -1;
+
+    // Convert token linked list to command table (cmd_tab)
+    cmd = cmd_tab(token);
+    if (!cmd)
+        return -1; // Return in case of memory allocation failure
+
+    // Expand environment variables in the command table
+    i = 0;
+    while (cmd[i])
+    {
+        cmd[i] = expansions(cmd[i], shell_state->active_env, shell_state->last_exit_stat);
+        if (!cmd[i]) // Check for allocation failure
+        {
+            while (i > 0) // Free previously allocated strings
+            {
+                free(cmd[--i]);
+            }
+            free(cmd);
+            return -1;
+        }
+        i++;
+    }
+
+    // Check if the command is "exit" and there's no active pipe
+    if (ft_strcmp(cmd[0], "exit") == 0 && has_pipe(token) == 0)
+    {
+        ft_mini_exit(shell_state, cmd);
+    }
+
+    // Check if the command is a built-in command
+    if (is_builtin(cmd[0]))
+    {
+        shell_state->return_code = exec_builtin(cmd, shell_state);
+    }
+    else
+    {
+        // Execute external binaries using exec_bin()
+        shell_state->return_code = exec_bin(cmd, shell_state->active_env, shell_state);
+    }
+
+    // Free the command table to prevent memory leaks
+    i = 0;
+    while (cmd[i])
+    {
+        free(cmd[i]);
+        i++;
+    }
+    free(cmd);
+
+    // Close any active pipes
+    if (shell_state->pipe_input_fd != -1)
+        ft_close(shell_state->pipe_input_fd);
+    if (shell_state->pipe_output_fd != -1)
+        ft_close(shell_state->pipe_output_fd);
+
+    // Reset pipe-related state in shell_state
+    shell_state->pipe_input_fd = -1;
+    shell_state->pipe_output_fd = -1;
+    shell_state->is_foreground = 1;
+
+    return shell_state->return_code;
+}

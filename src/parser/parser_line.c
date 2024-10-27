@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 16:17:41 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:33:27 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int quote_check(t_shell_state *shell_state, char **line)
  * - This function does not return a value.
  */
 
-void parse(t_shell_state *shell_state)
+void ft_parse_input(t_shell_state *shell_state)
 {
     char *line;
     t_cmd_token *token;
@@ -150,7 +150,8 @@ void parse(t_shell_state *shell_state)
     ft_putstr_fd("\033[0;36m\033[1mminishell ▸ \033[0m", STDERR);
 
     // Get the next line of input and check for the exit condition
-    if (get_next_line(0) == -2)
+    //I put the char * cast so it would compile. This might need further adjustments
+    if (get_next_line(0) == (char *)-2)
     {
         shell_state->should_exit = 1;
         ft_putendl_fd("exit", STDERR);
