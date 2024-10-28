@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:23:49 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 16:57:19 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:42:15 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void squish_args(t_shell_state *shell_state)
     token = shell_state->cmd_list;
     while (token)
     {
-        prev = prev_sep(token, NOSKIP);
+        prev = ft_prev_sep(token, NOSKIP);
         if (is_type(token, ARG) && is_types(prev, "TAI"))
         {
             while (is_last_valid_arg(prev) == 0)
@@ -187,7 +187,7 @@ t_cmd_token *get_tokens(char *line)
     prev = NULL;
     next = NULL;
     i = 0;
-    ft_skip_space(line, &i);
+    ft_skip_spacenl(line, &i);
     while (line[i])
     {
         sep = ignore_sep(line, i);
@@ -197,7 +197,7 @@ t_cmd_token *get_tokens(char *line)
             prev->next = next;
         prev = next;
         type_arg(next, sep);
-        ft_skip_space(line, &i);
+        ft_skip_spacenl(line, &i);
     }
     if (next)
         next->next = NULL;

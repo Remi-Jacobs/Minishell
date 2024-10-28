@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 19:37:26 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 23:47:43 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int is_last_valid_arg(t_cmd_token *token)
 
     if (!token || is_type(token, CMD) || is_type(token, ARG))
     {
-        prev = prev_sep(token, NOSKIP);
+        prev = ft_prev_sep(token, NOSKIP);
         if (!prev || is_type(prev, END) || is_type(prev, PIPE))
             return (1);
         return (0);
@@ -147,7 +147,7 @@ int is_last_valid_arg(t_cmd_token *token)
  * - 1 if the syntax check passes without errors.
  * - 0 if a syntax error is detected.
  */
-int check_line(t_shell_state *shell_state, t_cmd_token *token)
+int ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 {
     while (token)
     {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:37:40 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 19:43:56 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/27 22:15:58 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
  * - A pointer to the next separator token (`TRUNC` or greater) in the list.
  * - NULL if no separator is found.
  */
-t_cmd_token *next_sep(t_cmd_token *token, int skip)
+t_cmd_token *ft_next_sep(t_cmd_token *token, int skip)
 {
     if (token && skip)
         token = token->next;
@@ -52,7 +52,7 @@ t_cmd_token *next_sep(t_cmd_token *token, int skip)
  * - A pointer to the previous separator token (`TRUNC` or greater) in the list.
  * - NULL if no separator is found.
  */
-t_cmd_token *prev_sep(t_cmd_token *token, int skip)
+t_cmd_token *ft_prev_sep(t_cmd_token *token, int skip)
 {
     if (token && skip)
         token = token->prev;
@@ -76,7 +76,7 @@ t_cmd_token *prev_sep(t_cmd_token *token, int skip)
  * - A pointer to the next command token (`CMD`) in the list.
  * - NULL if no command token is found.
  */
-t_cmd_token *next_run(t_cmd_token *token, int skip)
+t_cmd_token *ft_next_run(t_cmd_token *token, int skip)
 {
     if (token && skip)
         token = token->next;
