@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 19:44:43 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/22 19:11:49 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/29 16:44:55 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static  char  *ft_get_env_path(t_env_variable *env, const char *var, size_t len)
 		if (ft_strncmp(env->variable, var, len) == 0)
 		{
 			s_alloc = ft_strlen(env->variable) - len;
-			if (!(old_pwd = (char *)malloc(sizeof(char) * (s_alloc + 1))))
+			if (!(old_pwd = malloc(sizeof(char) * s_alloc + 1)))
 				return (NULL);
 			i = 0;
 			j = 0;

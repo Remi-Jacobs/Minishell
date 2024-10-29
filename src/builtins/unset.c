@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 03:30:16 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/22 03:31:00 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/29 17:02:46 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,33 @@ static size_t   ft_env_size(char *env)
 	return (size);
 }
 
-static void     ft_remove_env(t_shell_state *state, t_env_variable *env)
+static void     ft_remove_env(t_shell_state *shell_state, t_env_variable *env)
 {
-	if (state->active_env == env && env->next == NULL)
+	if (shell_state->active_env == env && env->next == NULL)
 	{
-		ft_memdel(state->active_env->variable);
-		state->active_env->variable = NULL;
-		state->active_env->next = NULL;
+		ft_memdel(shell_state->active_env->variable);
+		shell_state->active_env->variable = NULL;
+		shell_state->active_env->next = NULL;
 		return ;
 	}
 	ft_memdel(env->variable);
 	ft_memdel(env);
 }
-int		ft_unset(char **args, t_shell_state *state)
+int		ft_unset(char **args, t_shell_state *shell_state)
 {
 	t_env_variable	*env;
 	t_env_variable	*tmp;
 
-	env = state->active_env;
+	env = shell_state->active_env;
 	if (!args[1])
 		return (SUCCESS);
 	if (ft_strncmp(args[1], env->variable, ft_env_size(env->variable)) == 0)
 	{
-		if (state->active_env)
-			state->active_env = env->next;
+		if (env->next)
+			shell_state->active_env = env->next;
 		else
-			state->active_env = state->active_env;
-		ft_remove_env(state, env);
+			shell_state->active_env = shell_state->active_env;
+		ft_remove_env(shell_state, env);
 		return (SUCCESS);
 	}
 	while (env && env->next)
@@ -56,7 +56,7 @@ int		ft_unset(char **args, t_shell_state *state)
 		if (ft_strncmp(args[1], env->next->variable, ft_env_size(env->next->variable)) == 0)
 		{
 			tmp = env->next->next;
-			ft_remove_env(state, tmp);
+			ft_remove_env(shell_state, env->next);
 			env->next = tmp;
 			return (SUCCESS);
 		}
