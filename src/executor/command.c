@@ -3,391 +3,143 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 22:25:18 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/27 21:51:54 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:14:28 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * error_message - Prints an appropriate error message based on the provided path.
- * 
- * @path: A pointer to a string containing the path of the file or command.
- * 
- * This function checks if the specified `path` is a command, a directory, or a file 
- * with permission issues. It uses `open` and `opendir` to determine the nature of the 
- * path and prints a suitable error message to standard error (`STDERR`).
- * 
- * Return:
- * - `UNKNOWN_COMMAND` if the path is not found or is an invalid command.
- * - `IS_DIRECTORY` if the path is a directory.
- */
-
-
-// Open the path as a file and attempt to open it as a directory.
-// Print an error message based on the following checks:
-// If the path does not contain a /, print "command not found".
-// If the file could not be opened and it is not a directory, print "No such file or directory".
-// If the file is a directory, print "is a directory".
-// If the file exists but permissions are denied, print "Permission denied".
-// Determine the return value:
-// If the path is not a command, return UNKNOWN_COMMAND.
-// If the path is a directory, return IS_DIRECTORY.
-// Close the directory and file if they were opened.
-
-int error_message(const char *path)
+int			ft_error_message(char *path)
 {
-    struct stat path_stat;
-    DIR *dir;
-    int file_descriptor;
+	DIR	*folder;
+	int	fd;
+	int	ret;
 
-    // First, check if the path contains a '/'
-    if (ft_strchr(path, '/') == NULL)
-    {
-        // If no '/', it's likely a command, so print "command not found"
-        ft_putstr_fd("mimishell: ",STDERR);
-        ft_putstr_fd((char *) path, STDERR);
-        ft_putendl_fd(": command not found",STDERR);
-        // fprintf(stderr, "minishell: %s: command not found\n", path);
-        return UNKNOWN_CMD;
-    }
-
-    // Try to open the file at the given path
-    file_descriptor = open(path, O_RDONLY);
-    if (file_descriptor == -1)
-    {
-        // Check if the path is a directory
-        dir = opendir(path);
-        if (dir)
-        {
-            // Path is a directory, print "is a directory" error
-            fprintf(stderr, "minishell: %s: is a directory\n", path);
-            closedir(dir);
-            return IS_DIRECTORY;
-        } 
-        else if (errno == ENOENT) {
-            // If the file does not exist, print "No such file or directory"
-            fprintf(stderr, "minishell: %s: No such file or directory\n", path);
-        } 
-        else if (errno == EACCES) {
-            // If the file exists but permission is denied, print "Permission denied"
-            fprintf(stderr, "minishell: %s: Permission denied\n", path);
-        } 
-        else {
-            // Generic error case
-            fprintf(stderr, "minishell: %s: Error\n", path);
-        }
-        return UNKNOWN_CMD;
-    }
-
-    // Check if the path is a directory
-    if (fstat(file_descriptor, &path_stat) == 0 && S_ISDIR(path_stat.st_mode)) {
-        // If it's a directory, print "is a directory"
-        fprintf(stderr, "minishell: %s: is a directory\n", path);
-        close(file_descriptor);
-        return IS_DIRECTORY;
-    }
-
-    // Close the file descriptor if opened
-    close(file_descriptor);
-
-    // Return UNKNOWN_COMMAND if none of the above checks matched
-    return UNKNOWN_CMD;
+	fd = open(path, O_WRONLY);
+	folder = opendir(path);
+	ft_putstr_fd("minishell: ", STDERR);
+	ft_putstr_fd(path, STDERR);
+	if (ft_strchr(path, '/') == NULL)
+		ft_putendl_fd(": command not found", STDERR);
+	else if (fd == -1 && folder == NULL)
+		ft_putendl_fd(": No such file or directory", STDERR);
+	else if (fd == -1 && folder != NULL)
+		ft_putendl_fd(": is a directory", STDERR);
+	else if (fd != -1 && folder == NULL)
+		ft_putendl_fd(": Permission denied", STDERR);
+	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
+		ret = UNKNOWN_CMD;
+	else
+		ret = IS_DIRECTORY;
+	if (folder)
+		closedir(folder);
+	ft_close(fd);
+	return (ret);
 }
 
-
-/**
- * magic_box - Executes a command using `execve` after forking a child process.
- * 
- * @path: A pointer to a string containing the path of the executable command.
- * @args: A double pointer to an array of strings representing command-line arguments.
- * @env: A pointer to the environment variable list (`t_env_variable`).
- * @shell_state: A pointer to the shell state structure (`t_shell_state`).
- * 
- * This function forks a child process to execute a command using `execve`. It constructs 
- * an environment array from the environment variable list, checks if the `path` contains 
- * a directory separator, and attempts to execute the command. If execution fails, it calls 
- * `error_message()` to print an appropriate error message and returns the error code.
- * 
- * Return:
- * - The exit status of the child process.
- * - A custom error code based on the result of `execve` or signal termination.
- */
-
-// Pseudo Code for magic_box
-// Fork the current process.
-// In the child process:
-// Convert the environment variables to an array of strings.
-// If the path contains a /, attempt to execute the command using execve().
-// If execution fails, call error_message() to print an error message.
-// Free allocated memory and exit with the error code.
-// In the parent process:
-// Wait for the child process to finish.
-// Check if a signal (SIGINT or SIGQUIT) was received:
-// If so, return the corresponding exit status.
-// Return the exit status of the child process.
-
-// Helper function to convert environment list to an array of strings
-char **convert_env_to_array(t_env_variable *env)
+int	ft_magic_box(char *path, char **args, t_env_variable *env, t_shell_state *shell_state)
 {
-    int count = 0;
-    t_env_variable *tmp = env;
-    char **env_array;
+	char	**env_array;
+	char	*env_string;
+	int		ret;
 
-    // Count the number of environment variables
-    while (tmp)
-    {
-        count++;
-        tmp = tmp->next;
-    }
+	ret = SUCCESS;
+	global_sig.child_proc_id = fork();
 
-    // Allocate memory for the environment array
-    env_array = (char **)malloc(sizeof(char *) * (count + 1));
-    if (!env_array)
-        return NULL;
+	if (global_sig.child_proc_id == 0)  // Child process
+	{
+		// Convert environment variables to a string format and split them into an array
+		env_string = ft_env_to_str(env);
+		env_array = ft_split(env_string, '\n');
+		ft_memdel(env_string);
 
-    // Copy environment variables to the array
-    count = 0;
-    while (env)
-    {
-        env_array[count++] = env->variable;
-        env = env->next;
-    }
-    env_array[count] = NULL;  // Null-terminate the array
-    return env_array;
+		// Execute command if the path contains a '/'
+		if (ft_strchr(path, '/') != NULL)
+			execve(path, args, env_array);
+
+		// Handle errors if execve fails
+		ret = ft_error_message(path);
+		ft_free_tab(env_array);
+		ft_free_token(shell_state->cmd_list);
+		exit(ret);  // Exit with the error code
+	}
+	else  // Parent process
+	{
+		// Wait for the child process to finish and retrieve its exit status
+		waitpid(global_sig.child_proc_id, &ret, 0);
+	}
+
+	// Check if a signal was received (SIGINT or SIGQUIT) and return the last exit status
+	if (global_sig.sigint_received == 1 || global_sig.sigquit_received == 1)
+		return (global_sig.last_exit_stat);
+
+	// Normalize the return value based on specific codes
+	if (ret == 32256 || ret == 32512)
+		ret = ret / 256;
+	else
+		ret = !!ret;
+
+	return (ret);
 }
 
-int magic_box(const char *path, char **args, t_env_variable *env, t_shell_state *shell_state)
+char		*ft_path_join(const char *s1, const char *s2)
 {
-    pid_t pid;
-    int status;
-    char **envp;
-    (void) shell_state;
+	char	*tmp;
+	char	*path;
 
-    // Convert environment variables to an array of strings (envp)
-    if(!(envp = convert_env_to_array(env)))
-        return (ft_putendl_fd("failed to convert env to array", STDERR), -1); // You need to implement this function
-
-    // Fork the process
-    pid = fork();
-
-    if (pid == 0)  // Child process
-    {
-        // In child process: Handle signals differently
-        global_sig.child_proc_id = 1;
-
-        // If the path contains a '/', try to execute the command using execve()
-        if (ft_strchr(path, '/'))
-        {
-            if (execve(path, args, envp) == -1)
-            {
-                error_message(path);
-                ft_free_tab(envp);
-                exit(UNKNOWN_CMD);  // Exit with the custom error code
-            }
-        }
-
-        // Free the environment array and exit
-        ft_free_tab(envp);
-        exit(EXIT_SUCCESS);
-    }
-    else if (pid > 0)  // Parent process
-    {
-        // In parent process: Wait for the child to finish and check signals
-        global_sig.child_proc_id = pid;
-
-        waitpid(pid, &status, 0);
-
-        // Reset child process id after child finishes
-        global_sig.child_proc_id = 0;
-
-        if (WIFSIGNALED(status))  // If the process was terminated by a signal
-        {
-            if (WTERMSIG(status) == SIGINT)
-                global_sig.last_exit_stat = 130;  // SIGINT exit status
-            else if (WTERMSIG(status) == SIGQUIT)
-                global_sig.last_exit_stat = 131;  // SIGQUIT exit status
-
-            return global_sig.last_exit_stat;
-        }
-
-        // Check if the child exited normally
-        if (WIFEXITED(status))
-            global_sig.last_exit_stat = WEXITSTATUS(status);
-
-        return global_sig.last_exit_stat;
-    }
-    else
-    {
-        // Fork failed
-        perror("fork");
-        return -1;
-    }
+	tmp = ft_strjoin(s1, "/");
+	path = ft_strjoin(tmp, s2);
+	ft_memdel(tmp);
+	return (path);
 }
 
-/**
- * path_join - Joins two path components with a forward slash (`/`).
- * 
- * @s1: A pointer to the first path component.
- * @s2: A pointer to the second path component.
- * 
- * This function concatenates two path components (`s1` and `s2`) with a forward slash (`/`) 
- * between them. It returns the newly created path string.
- * 
- * Return:
- * - A pointer to a newly allocated string containing the joined path.
- */
-
-// Pseudo Code for path_join
-// Concatenate the first path component (s1) with a /.
-// Concatenate the resulting string with the second path component (s2).
-// Free the temporary string used for the first concatenation.
-// Return the final joined path.
-
-char *path_join(const char *s1, const char *s2)
+char		*ft_check_dir(char *bin, char *command)
 {
-    char *joined_path;
-    int len1, len2;
+	DIR				*folder;
+	struct dirent	*item;
+	char			*path;
 
-    if (!s1 || !s2)
-        return (NULL);
-
-    len1 = strlen(s1);
-    len2 = strlen(s2);
-
-    // Allocate memory for the new path (+2 for '/' and '\0')
-    joined_path = (char *)malloc(len1 + len2 + 2);
-    if (!joined_path)
-        return (NULL);
-
-    // Copy the first path (s1) into joined_path
-    strcpy(joined_path, s1);
-
-    // Add the forward slash if s1 does not already end with '/'
-    if (s1[len1 - 1] != '/')
-        strcat(joined_path, "/");
-
-    // Append the second path (s2)
-    strcat(joined_path, s2);
-
-    return (joined_path);
+	path = NULL;
+	folder = opendir(bin);
+	if (!folder)
+		return (NULL);
+	while ((item = readdir(folder)))
+	{
+		if (ft_strcmp(item->d_name, command) == 0)
+			path = ft_path_join(bin, item->d_name);
+	}
+	closedir(folder);
+	return (path);
 }
 
-/**
- * check_dir - Searches for a command in a specified directory.
- * 
- * @bin: A pointer to a string containing the directory path.
- * @command: A pointer to a string containing the command name.
- * 
- * This function opens the specified directory (`bin`) and searches for an entry that 
- * matches the given command name (`command`). If the command is found, it returns the 
- * full path to the command by joining the directory and command name.
- * 
- * Return:
- * - A pointer to the full path of the command if found.
- * - NULL if the command is not found or if the directory cannot be opened.
- */
-
-// Pseudo Code for check_dir
-// Open the specified directory (bin).
-// If the directory cannot be opened, return NULL.
-// Iterate through the directory entries:
-// If an entry matches the command name (command), create the full path by joining the directory and command name.
-// Return the full path if the command was found, otherwise return NULL.
-
-char *check_dir(const char *bin, const char *command)
+int			ft_exec_bin(char **args, t_env_variable *env, t_shell_state *shell_state)
 {
-    DIR *dir;
-    struct dirent *entry;
-    char *full_path = NULL;
+	int		i;
+	char	**bin;
+	char	*path;
+	int		ret;
 
-    // Open the directory specified by bin
-    dir = opendir(bin);
-    if (!dir)
-        return (NULL);  // If directory cannot be opened, return NULL
-
-    // Iterate through the directory entries
-    while ((entry = readdir(dir)) != NULL)
-    {
-        // Check if the entry matches the command
-        if (strcmp(entry->d_name, command) == 0)
-        {
-            // If found, join the bin path with the command name to create the full path
-            full_path = path_join(bin, command);
-            break;
-        }
-    }
-
-    closedir(dir);  // Close the directory
-    return (full_path);  // Return the full path if found, NULL otherwise
-}
-
-/**
- * exec_bin - Executes a binary file found in the system's PATH.
- * 
- * @args: A double pointer to an array of strings representing command-line arguments.
- * @env: A pointer to the environment variable list (`t_env_variable`).
- * @shell_state: A pointer to the shell state structure (`t_shell_state`).
- * 
- * This function searches for the specified binary command in the directories listed 
- * in the `PATH` environment variable. If the command is found, it calls `magic_box()` 
- * to execute it. If the command is not found, it calls `magic_box()` with the original 
- * command name to print an appropriate error message.
- * 
- * Return:
- * - The exit status or error code of the executed command.
- */
-
-// Pseudo Code for exec_bin
-// Search for the PATH environment variable.
-// If PATH is not found, call magic_box() with the original command name.
-// Split the PATH variable into directories.
-// Check if the command is present in the directories:
-// For each directory in PATH, call check_dir() to search for the command.
-// If a command is found, call magic_box() to execute it.
-// Return the exit status from magic_box().
-
-int exec_bin(char **args, t_env_variable *env, t_shell_state *shell_state)
-{
-    char *path_var;
-    char **path_dirs;
-    char *full_path;
-    int i;
-
-    // Search for the PATH environment variable
-    path_var = getenv("PATH");
-    if (!path_var)
-    {
-        // If PATH is not found, execute the command directly using magic_box
-        return magic_box(args[0], args, env, shell_state);
-    }
-
-    // Split the PATH variable into directories using ':' as the delimiter
-    path_dirs = ft_split(path_var, ':');
-    if (!path_dirs)
-        return -1;  // Error splitting the PATH
-
-    // Check if the command is present in any of the directories
-    i = 0;
-    while (path_dirs[i])
-    {
-        // Search for the command in the current directory
-        full_path = check_dir(path_dirs[i], args[0]);
-        if (full_path)
-        {
-            // If the command is found, execute it using magic_box
-            int result = magic_box(full_path, args, env, shell_state);
-            free(full_path);
-            free(path_dirs);
-            return result;
-        }
-        i++;
-    }
-
-    // If no command is found in the PATH, call magic_box with the original command name
-    free(path_dirs);
-    return magic_box(args[0], args, env, shell_state);
+	i = 0;
+	ret = UNKNOWN_CMD;
+	while (env && env->variable && ft_strncmp(env->variable, "PATH=", 5) != 0)
+		env = env->next;
+	if (env == NULL || env->next == NULL)
+		return (ft_magic_box(args[0], args, env, shell_state));
+	bin = ft_split(env->variable, ':');
+	if (!args[0] && !bin[0])
+		return (ERROR);
+	i = 1;
+	path = ft_check_dir(bin[0] + 5, args[0]);
+	while (args[0] && bin[i] && path == NULL)
+		path = ft_check_dir(bin[i++], args[0]);
+	if (path != NULL)
+		ret = ft_magic_box(path, args, env, shell_state);
+	else
+		ret = ft_magic_box(args[0], args, env, shell_state);
+	ft_free_tab(bin);
+	ft_memdel(path);
+	return (ret);
 }

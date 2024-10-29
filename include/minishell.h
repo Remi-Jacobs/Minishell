@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:10:21 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/29 11:44:22 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_cmd_token
 	int					type;
 	struct s_cmd_token	*prev;
 	struct s_cmd_token	*next;
-}					t_cmd_token;
+}				t_cmd_token;
 
 
 /*
@@ -151,110 +151,115 @@ typedef struct s_expand_data
 /*
 ** BUILTINS
 */
-int		ft_cd(char **args, t_env_variable *env);
-int		ft_echo(char **args);
-int		ft_env(t_env_variable *env);
-void	ft_mini_exit(t_shell_state *shell_state, char **cmd_args);
-int		ft_add_to_env(const char *args, t_env_variable *env);
-char	*ft_get_env_name(char *dest, const char *src);
-int		ft_is_in_env(t_env_variable *env, char *args);
-int		ft_export(char **args, t_env_variable *env, t_env_variable *secret);
-int		ft_pwd(void);
-int		ft_unset(char **args, t_shell_state *state);
+int			ft_cd(char **args, t_env_variable *env);
+int			ft_echo(char **args);
+int			ft_env(t_env_variable *env);
+void		ft_mini_exit(t_shell_state *shell_state, char **cmd_args);
+int			ft_add_to_env(const char *args, t_env_variable *env);
+char		*ft_get_env_name(char *dest, const char *src);
+int			ft_is_in_env(t_env_variable *env, char *args);
+int			ft_export(char **args, t_env_variable *env, t_env_variable *secret);
+int			ft_pwd(void);
+int			ft_unset(char **args, t_shell_state *state);
 
 /*
 ** PARSING
 */
-char	*expansions(char *arg, t_env_variable *env, int ret);
-char	*space_alloc(char *line);
-char	*space_line(char *line);
-int		quote_check(t_shell_state *shell_state, char **line);
-void	ft_parse_input(t_shell_state *shell_state);
-void	type_arg(t_cmd_token *token, int separator);
-void	squish_args(t_shell_state *shell_state);
-int		next_alloc(char *line, int *i);
-t_cmd_token	*next_token(char *line, int *i);
-t_cmd_token	*get_tokens(char *line);
+char		*ft_expansions(char *arg, t_env_variable *env, int ret);
+
+char		*ft_space_alloc(char *line);
+char		*ft_space_line(char *line);
+int			ft_quote_check(t_shell_state *shell_state, char **line);
+void		ft_parse_input(t_shell_state *shell_state);
+
+void		ft_type_arg(t_cmd_token *token, int separator);
+void		ft_squish_args(t_shell_state *shell_state);
+int			ft_next_alloc(char *line, int *i);
+t_cmd_token	*ft_next_token(char *line, int *i);
+t_cmd_token	*ft_get_tokens(char *line);
 
 /*
 ** EXECUTOR
 */
-int		is_builtin(const char *command);
-int		exec_builtin(char **args, t_shell_state *shell_state);
-int		error_message(const char *path);
-char	**convert_env_to_array(t_env_variable *env);
-int		magic_box(const char *path, char **args, t_env_variable *env, t_shell_state *shell_state);
-char	*path_join(const char *s1, const char *s2);
-char	*check_dir(const char *bin, const char *command);
-int		exec_bin(char **args, t_env_variable *env, t_shell_state *shell_state);
-char	**cmd_tab(t_cmd_token *start);
-int		ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token);
+int			ft_is_builtin(char *command);
+int			ft_exec_builtin(char **args, t_shell_state *shell_state);
+
+int			ft_error_message(char *path);
+int			ft_magic_box(char *path, char **args, t_env_variable *env,
+				t_shell_state *shell_state);
+char		*ft_path_join(const char *s1, const char *s2);
+char		*ft_check_dir(char *bin, char *command);
+int			ft_exec_bin(char **args, t_env_variable *env,
+				t_shell_state *shell_state);
+
+char		**ft_cmd_tab(t_cmd_token *start);
+void		ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token);
 
 /*
 ** ENVIRONMENT
 */
-size_t	ft_size_env(t_env_variable *lst);
-char	*ft_env_to_str(t_env_variable *lst);
-int		ft_env_init(t_shell_state *shell_state, char **env_array);
-int		ft_secret_env_init(t_shell_state *shell_state, char **env_array);
-int		is_env_char(int c);
-int		ft_is_valid_env(const char *env);
-int		ft_env_value_len(const char *env);
-char	*ft_env_value(char *env);
-char	*ft_get_env_value(char *arg, t_env_variable *env);
-int		ft_str_env_len(char **env);
-void	ft_sort_env(char **tab, int env_len);
-void	ft_print_sorted_env(t_env_variable *env);
-void	ft_increment_shell_level(t_env_variable *env);
+size_t		ft_size_env(t_env_variable *lst);
+char		*ft_env_to_str(t_env_variable *lst);
+int			ft_env_init(t_shell_state *shell_state, char **env_array);
+int			ft_secret_env_init(t_shell_state *shell_state, char **env_array);
+int			ft_is_env_char(int c);
+int			ft_is_valid_env(const char *env);
+int			ft_env_value_len(const char *env);
+char		*ft_env_value(char *env);
+char		*ft_get_env_value(char *arg, t_env_variable *env);
+int			ft_str_env_len(char **env);
+void		ft_sort_env(char **tab, int env_len);
+void		ft_print_sorted_env(t_env_variable *env);
+void		ft_increment_shell_level(t_env_variable *env);
 /*
-** REDIRECTIONS
+** RE_DIRECTIONS
 */
+void		ft_redir(t_shell_state *shell_state, t_cmd_token *token, int type);
+void		ft_input(t_shell_state *shell_state, t_cmd_token *token);
+int			ft_mini_pipe(t_shell_state *shell_state);
 
-void	ft_redir_output(t_shell_state *shell_state, t_cmd_token *token, int type);
-void	ft_redir_input(t_shell_state *shell_state, t_cmd_token *token);
-int		ft_minipipe(t_shell_state *shell_state);
-int		ft_redir_iop(char *ops, t_shell_state *shell_state, t_cmd_token *token);
 /*
 ** SIGNALS HANDLING
 */
-
-void	*ft_memdel(void *ptr); // remember to move to libft
-void	ft_sig_integer(int signal);
-void	ft_sig_exit(int signal);
-void	ft_sig_init(void);
+void		ft_sig_integer(int signal);
+void		ft_sig_exit(int signal);
+void		ft_sig_init(void);
 
 /*
-** UTILS
+** UTILS FUNCTIONS
 */
-void	ft_free_token(t_cmd_token *start);
-void	ft_free_env(t_env_variable *env);
-void	ft_free_tab(char **tab);
-int		create_pipe(int pipefd[2]);
-int		handle_child_process(int pipefd[2], t_shell_state *shell_state);
-int		handle_parent_process(int pipefd[2], pid_t pid, t_shell_state *shell_state);
-int		ret_size(int ret);
-int		get_var_len(const char *arg, int pos, t_env_variable *env, int ret);
-int		arg_alloc_len(const char *arg, t_env_variable *env, int ret);
-char	*get_var_value(const char *arg, int pos, t_env_variable *env, int ret);
-void	ft_close(int fd);
-void	ft_reset_std(t_shell_state *shell_state);
-void	ft_close_fds(t_shell_state *shell_state);
-void	ft_reset_fds(t_shell_state *shell_state);
-void	ft_free_token(t_cmd_token *start);
-void	ft_free_tab(char **tab);
-int		is_sep(char *line, int i);
-int		ignore_sep(char *line, int i);
-int		quotes(char *line, int index);
-int		is_last_valid_arg(t_cmd_token *token);
-int		ft_check_line(t_shell_state *shell_state, t_cmd_token *token);
-t_cmd_token *ft_next_sep(t_cmd_token *token, int skip);
-t_cmd_token *ft_prev_sep(t_cmd_token *token, int skip);
-t_cmd_token *ft_next_run(t_cmd_token *token, int skip);
-int		is_type(t_cmd_token *token, int type);
-int		is_types(t_cmd_token *token, char *types);
-int		has_type(t_cmd_token *token, int type);
-int		has_pipe(t_cmd_token *token);
-t_cmd_token *next_type(t_cmd_token *token, int type, int skip);
+int			ft_is_type(t_cmd_token *token, int type);
+int			ft_is_types(t_cmd_token *token, char *types);
+int			ft_has_type(t_cmd_token *token, int type);
+int			ft_has_pipe(t_cmd_token *token);
+t_cmd_token	*ft_next_type(t_cmd_token *token, int type, int skip);
+
+t_cmd_token	*ft_next_sep(t_cmd_token *token, int skip);
+t_cmd_token	*ft_prev_sep(t_cmd_token *token, int skip);
+t_cmd_token	*ft_next_run(t_cmd_token *token, int skip);
+
+int			ft_is_sep(char *line, int i);
+int			ft_ignore_sep(char *line, int i);
+int			ft_quotes(char *line, int index);
+int			ft_is_last_valid_arg(t_cmd_token *token);
+int			ft_check_line(t_shell_state *shell_state, t_cmd_token *token);
+
+void		ft_free_token(t_cmd_token *start);
+void		ft_free_env(t_env_variable *env);
+void		ft_free_tab(char **tab);
+
+void		ft_close(int fd);
+void		ft_reset_std(t_shell_state *shell_state);
+void		ft_close_fds(t_shell_state *shell_state);
+void		ft_reset_fds(t_shell_state *shell_state);
+
+int			ft_ret_size(int ret);
+int			ft_get_var_len(const char *arg, int pos,
+				t_env_variable *env, int ret);
+int			ft_arg_alloc_len(const char *arg, t_env_variable *env, int ret);
+char		*ft_get_var_value(const char *arg, int pos,
+				t_env_variable *env, int ret);
+
 /*
 ** External functions
 */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_val_level.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:09:54 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:09:58 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/29 13:07:46 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,26 +99,26 @@ static int ft_get_lvl(const char *str)
  */
 void ft_increment_shell_level(t_env_variable *env)
 {
-    int shell_level;
+    int sh_lvl_size;
     char env_name[BUFF_SIZE];
-    char *shlvl;
-    char *shell_level_value;
+    char *sh_lvl;
+    char *sh_lvl_val;
 
-    shell_level_value = ft_get_env_value("SHLVL", env);
-    if (ft_strcmp(shell_level_value, "") == 0)
-        return;
-    shell_level = ft_get_lvl(shell_level_value) + 1;
-    ft_memdel(shell_level_value);
+    sh_lvl_val = ft_get_env_value("SHLVL", env);
+    if (ft_strcmp(sh_lvl_val, "") == 0)
+        return ;
+    sh_lvl_size = ft_get_lvl(sh_lvl_val) + 1;
+    ft_memdel(sh_lvl_val);
     while (env && env->next)
     {
         ft_get_env_name(env_name, env->variable);
         if (ft_strcmp("SHLVL", env_name) == 0)
         {
             ft_memdel(env->variable);
-            shlvl = ft_itoa(shell_level);
-            env->variable = ft_strjoin("SHLVL=", shlvl);
-            ft_memdel(shlvl);
-            return;
+            sh_lvl = ft_itoa(sh_lvl_size);
+            env->variable = ft_strjoin("SHLVL=", sh_lvl);
+            ft_memdel(sh_lvl);
+            return ;
         }
         env = env->next;
     }

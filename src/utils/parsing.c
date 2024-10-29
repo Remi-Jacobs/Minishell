@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:47:43 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:17:57 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@
  * - 1 if the character is a separator and not escaped.
  * - 0 otherwise.
  */
-int is_sep(char *line, int i)
+int ft_is_sep(char *line, int i)
 {
     if (i > 0 && line[i - 1] == '\\' && ft_strchr("<>|;", line[i]))
         return (0);
-    else if (ft_strchr("<>|;", line[i]) && quotes(line, i) == 0)
+    else if (ft_strchr("<>|;", line[i]) && ft_quotes(line, i) == 0)
         return (1);
     else
         return (0);
@@ -50,7 +50,7 @@ int is_sep(char *line, int i)
  * - 1 if the separator is escaped by a backslash.
  * - 0 otherwise.
  */
-int ignore_sep(char *line, int i)
+int ft_ignore_sep(char *line, int i)
 {
     if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == ';')
         return (1);
@@ -80,7 +80,7 @@ int ignore_sep(char *line, int i)
  * - 1 if within double quotes.
  * - 2 if within single quotes.
  */
-int quotes(char *line, int index)
+int ft_quotes(char *line, int index)
 {
     int i;
     int open;
@@ -117,14 +117,14 @@ int quotes(char *line, int index)
  * - 1 if the token is a valid last argument.
  * - 0 otherwise.
  */
-int is_last_valid_arg(t_cmd_token *token)
+int ft_is_last_valid_arg(t_cmd_token *token)
 {
     t_cmd_token *prev;
 
-    if (!token || is_type(token, CMD) || is_type(token, ARG))
+    if (!token || ft_is_type(token, CMD) || ft_is_type(token, ARG))
     {
         prev = ft_prev_sep(token, NOSKIP);
-        if (!prev || is_type(prev, END) || is_type(prev, PIPE))
+        if (!prev || ft_is_type(prev, END) || ft_is_type(prev, PIPE))
             return (1);
         return (0);
     }
@@ -151,7 +151,7 @@ int ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 {
     while (token)
     {
-        if (is_types(token, "TAI") && (!token->next || is_types(token->next, "TAIPE")))
+        if (ft_is_types(token, "TAI") && (!token->next || ft_is_types(token->next, "TAIPE")))
         {
             ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
             if (token->next)
@@ -162,7 +162,7 @@ int ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
             shell_state->return_code = 258;
             return (0);
         }
-        if (is_types(token, "PE") && (!token->prev || !token->next || is_types(token->prev, "TAIPE")))
+        if (ft_is_types(token, "PE") && (!token->prev || !token->next || ft_is_types(token->prev, "TAIPE")))
         {
             ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
             ft_putstr_fd(token->content, STDERR);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:31:30 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/16 22:03:25 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/29 16:54:48 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,51 +34,54 @@ static int	nb_args(char **args)
 	return (size);
 }
 
-int	ft_echo(char **args)
+
+int				ft_echo(char **args)
 {
 	int		i;
-	int		n_flag;
+	int		n_option;
 
 	i = 1;
-	n_flag = 0;
-	while (nb_args(args) > 1 && ft_strcmp(args[i], "-n") == 0)
+	n_option = 0;
+	if (nb_args(args) > 1)
 	{
-		n_flag = 1;
-		i++;
+		while (args[i] && ft_strcmp(args[i], "-n") == 0)
+		{
+			n_option = 1;
+			i++;
+		}
+		while (args[i])
+		{
+			ft_putstr_fd(args[i], 1);
+			if (args[i + 1] && args[i][0] != '\0')
+				write(1, " ", 1);
+			i++;
+		}
 	}
-	while (args[i])
-	{
-		ft_putstr_fd(args[i], STDOUT);
-		if (args[i + 1] && args[i][0] != '\0')
-			write(1, " ", 1);
-		i++;
-	}
-	if (n_flag == 0)
+	if (n_option == 0)
 		write(1, "\n", 1);
 	return (SUCCESS);
 }
 
-
-// void	cmd_echo(char **args)
+// int	ft_echo(char **args)
 // {
-// 	int	new_line;
-// 	int	i;
+// 	int		i;
+// 	int		n_flag;
 
-// 	new_line = 1;
 // 	i = 1;
-
-// 	if (args[1] && ft_strcmp(args[1], "-n") == 0)
+// 	n_flag = 0;
+// 	while (nb_args(args) > 1 && ft_strcmp(args[i], "-n") == 0)
 // 	{
-// 		new_line = 0;
-// 		i = 2;
+// 		n_flag = 1;
+// 		i++;
 // 	}
 // 	while (args[i])
 // 	{
-// 		printf("%s", args[i]);
-// 		if (args[i + 1])
-// 			printf(" ");
+// 		ft_putstr_fd(args[i], STDOUT);
+// 		if (args[i + 1] && args[i][0] != '\0')
+// 			write(1, " ", 1);
 // 		i++;
 // 	}
-// 	if (new_line)
-// 		printf("\n");
+// 	if (n_flag == 0)
+// 		write(1, "\n", 1);
+// 	return (SUCCESS);
 // }

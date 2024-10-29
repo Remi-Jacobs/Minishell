@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:58:58 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 19:28:14 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:09:04 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * - 1 if the character is a valid environment variable character (alphanumeric or underscore).
  * - 0 otherwise.
  */
-int is_env_char(int c)
+int ft_is_env_char(int c)
 {
     if (ft_isalnum(c) == 1 || c == '_')
         return (1);

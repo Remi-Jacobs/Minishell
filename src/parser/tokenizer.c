@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:23:49 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:42:15 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 17:10:54 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * such as `TRUNC`, `APPEND`, `INPUT`, `PIPE`, or `END`. If the token does not match any of these conditions, 
  * it assigns the token as either a command (`CMD`) or an argument (`ARG`).
  */
-void type_arg(t_cmd_token *token, int separator)
+void ft_type_arg(t_cmd_token *token, int separator)
 {
     if (ft_strcmp(token->content, "") == 0)
         token->type = EMPTY;
@@ -54,7 +54,7 @@ void type_arg(t_cmd_token *token, int separator)
  * (TRUNC, APPEND, or INPUT). If so, it modifies the links in the token list, ensuring 
  * that the argument tokens are associated with their appropriate commands or separators.
  */
-void squish_args(t_shell_state *shell_state)
+void ft_squish_args(t_shell_state *shell_state)
 {
     t_cmd_token *token;
     t_cmd_token *prev;
@@ -63,9 +63,9 @@ void squish_args(t_shell_state *shell_state)
     while (token)
     {
         prev = ft_prev_sep(token, NOSKIP);
-        if (is_type(token, ARG) && is_types(prev, "TAI"))
+        if (ft_is_type(token, ARG) && ft_is_types(prev, "TAI"))
         {
-            while (is_last_valid_arg(prev) == 0)
+            while (ft_is_last_valid_arg(prev) == 0)
                 prev = prev->prev;
             token->prev->next = token->next;
             if (token->next)
@@ -94,7 +94,7 @@ void squish_args(t_shell_state *shell_state)
  * Return:
  * - The length of the next token, adjusted for special characters and quotes.
  */
-int next_alloc(char *line, int *i)
+int ft_next_alloc(char *line, int *i)
 {
     int count;
     int j;
@@ -136,7 +136,7 @@ int next_alloc(char *line, int *i)
  * - A pointer to the newly created token.
  * - NULL if memory allocation fails.
  */
-t_cmd_token *next_token(char *line, int *i)
+t_cmd_token *ft_next_token(char *line, int *i)
 {
     t_cmd_token *token;
     int j;
@@ -144,7 +144,7 @@ t_cmd_token *next_token(char *line, int *i)
 
     j = 0;
     c = ' ';
-    if (!(token = malloc(sizeof(t_cmd_token))) || !(token->content = malloc(sizeof(char) * next_alloc(line, i))))
+    if (!(token = malloc(sizeof(t_cmd_token))) || !(token->content = malloc(sizeof(char) * ft_next_alloc(line, i))))
         return (NULL);
     while (line[*i] && (line[*i] != ' ' || c != ' '))
     {
@@ -177,7 +177,7 @@ t_cmd_token *next_token(char *line, int *i)
  * Return:
  * - A pointer to the head of the linked list of tokens.
  */
-t_cmd_token *get_tokens(char *line)
+t_cmd_token *ft_get_tokens(char *line)
 {
     t_cmd_token *prev;
     t_cmd_token *next;
@@ -190,13 +190,13 @@ t_cmd_token *get_tokens(char *line)
     ft_skip_spacenl(line, &i);
     while (line[i])
     {
-        sep = ignore_sep(line, i);
-        next = next_token(line, &i);
+        sep = ft_ignore_sep(line, i);
+        next = ft_next_token(line, &i);
         next->prev = prev;
         if (prev)
             prev->next = next;
         prev = next;
-        type_arg(next, sep);
+        ft_type_arg(next, sep);
         ft_skip_spacenl(line, &i);
     }
     if (next)

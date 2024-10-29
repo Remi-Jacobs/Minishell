@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 16:04:46 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/22 19:30:06 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/29 16:49:13 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int ft_add_to_env(const char *args, t_env_variable *env)
 		env->variable = ft_strdup(args);
 		return (SUCCESS);
 	}
-	if (!(new_env = (t_env_variable *)malloc(sizeof(t_env_variable))))
+	if (!(new_env = malloc(sizeof(t_env_variable))))
 		return (-1);
 	new_env->variable = ft_strdup(args);
 	while (env && env->next && env->next->next)
@@ -88,6 +88,7 @@ int	ft_export(char **args, t_env_variable *env, t_env_variable *secret)
 {
 	int	new_env;
 	int	error_ret;
+	
 	new_env = 0;
 	if (!args[1])
 	{

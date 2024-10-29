@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 15:28:09 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/27 23:16:37 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:56:05 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,46 +46,46 @@
 // Duplicate the output file descriptor (shell_state->output_fd) to STDOUT.
 
 
-void	ft_redir_output(t_shell_state *shell_state, t_cmd_token *token, int type)
-{
-    int new_fd;
+// void	ft_redir_output(t_shell_state *shell_state, t_cmd_token *token, int type)
+// {
+//     int new_fd;
 
-    // Close the current output file descriptor, if it's valid
-    if (shell_state->output_fd > 0)
-        close(shell_state->output_fd);
+//     // Close the current output file descriptor, if it's valid
+//     if (shell_state->output_fd > 0)
+//         close(shell_state->output_fd);
 
-    // Check the redirection type (TRUNC or APPEND)
-    if (type == TRUNC)
-        new_fd = open(token->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    else
-        new_fd = open(token->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+//     // Check the redirection type (TRUNC or APPEND)
+//     if (type == TRUNC)
+//         new_fd = open(token->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//     else
+//         new_fd = open(token->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
 
-    // Check if the file was successfully opened
-    if (new_fd == -1)
-    {
-        // Error opening the file, display an error message
-        ft_putstr_fd("minishell: ", STDERR);
-        ft_putstr_fd(token->content, STDERR);
-        ft_putendl_fd(": No such file or directory", STDERR);
+//     // Check if the file was successfully opened
+//     if (new_fd == -1)
+//     {
+//         // Error opening the file, display an error message
+//         ft_putstr_fd("minishell: ", STDERR);
+//         ft_putstr_fd(token->content, STDERR);
+//         ft_putendl_fd(": No such file or directory", STDERR);
 
-        // Set the return code and skip execution
-        shell_state->return_code = 1;
-        shell_state->should_skip_exec = 1;
-        return;
-    }
+//         // Set the return code and skip execution
+//         shell_state->return_code = 1;
+//         shell_state->should_skip_exec = 1;
+//         return;
+//     }
 
-    // Assign the new file descriptor to output_fd
-    shell_state->output_fd = new_fd;
+//     // Assign the new file descriptor to output_fd
+//     shell_state->output_fd = new_fd;
 
-    // Redirect STDOUT to the new file descriptor
-    if (dup2(shell_state->output_fd, STDOUT_FILENO) == -1)
-    {
-        perror("dup2");
-        shell_state->return_code = 1;
-        shell_state->should_skip_exec = 1;
-        close(shell_state->output_fd);
-    }
-}
+//     // Redirect STDOUT to the new file descriptor
+//     if (dup2(shell_state->output_fd, STDOUT_FILENO) == -1)
+//     {
+//         perror("dup2");
+//         shell_state->return_code = 1;
+//         shell_state->should_skip_exec = 1;
+//         close(shell_state->output_fd);
+//     }
+// }
 
 
 /**
@@ -112,43 +112,43 @@ void	ft_redir_output(t_shell_state *shell_state, t_cmd_token *token, int type)
 // Exit the function.
 // Duplicate the input file descriptor (shell->input_fd) to STDIN.
 
-void	ft_redir_input(t_shell_state *shell_state, t_cmd_token *token)
-{
-    int new_fd;
+// void	ft_redir_input(t_shell_state *shell_state, t_cmd_token *token)
+// {
+//     int new_fd;
 
-    // Close the current input file descriptor, if it's valid
-    if (shell_state->input_fd > 0)
-        close(shell_state->input_fd);
+//     // Close the current input file descriptor, if it's valid
+//     if (shell_state->input_fd > 0)
+//         close(shell_state->input_fd);
 
-    // Open the file in read-only mode
-    new_fd = open(token->content, O_RDONLY);
+//     // Open the file in read-only mode
+//     new_fd = open(token->content, O_RDONLY);
 
-    // Check if the file was successfully opened
-    if (new_fd == -1)
-    {
-        // Error opening the file, display an error message
-        ft_putstr_fd("minishell: ", STDERR);
-        ft_putstr_fd(token->content, STDERR);
-        ft_putendl_fd(": No such file or directory", STDERR);
+//     // Check if the file was successfully opened
+//     if (new_fd == -1)
+//     {
+//         // Error opening the file, display an error message
+//         ft_putstr_fd("minishell: ", STDERR);
+//         ft_putstr_fd(token->content, STDERR);
+//         ft_putendl_fd(": No such file or directory", STDERR);
 
-        // Set the return code and skip execution
-        shell_state->return_code = 1;
-        shell_state->should_skip_exec = 1;
-        return;
-    }
+//         // Set the return code and skip execution
+//         shell_state->return_code = 1;
+//         shell_state->should_skip_exec = 1;
+//         return;
+//     }
 
-    // Assign the new file descriptor to input_fd
-    shell_state->input_fd = new_fd;
+//     // Assign the new file descriptor to input_fd
+//     shell_state->input_fd = new_fd;
 
-    // Redirect STDIN to the new file descriptor
-    if (dup2(shell_state->input_fd, STDIN_FILENO) == -1)
-    {
-        perror("dup2");
-        shell_state->return_code = 1;
-        shell_state->should_skip_exec = 1;
-        close(shell_state->input_fd);
-    }
-}
+//     // Redirect STDIN to the new file descriptor
+//     if (dup2(shell_state->input_fd, STDIN_FILENO) == -1)
+//     {
+//         perror("dup2");
+//         shell_state->return_code = 1;
+//         shell_state->should_skip_exec = 1;
+//         close(shell_state->input_fd);
+//     }
+// }
 
 /**
  * minipipe - Creates a pipe for inter-process communication and forks a new process.
@@ -190,52 +190,115 @@ void	ft_redir_input(t_shell_state *shell_state, t_cmd_token *token)
 
 
 // Main minipipe function
-int	ft_minipipe(t_shell_state *shell_state)
-{
-    int pipefd[2];
-    pid_t pid;
+// int	ft_minipipe(t_shell_state *shell_state)
+// {
+//     int pipefd[2];
+//     pid_t pid;
 
-    if (create_pipe(pipefd) == -1)
-        return -1;
+//     if (create_pipe(pipefd) == -1)
+//         return -1;
 
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        return -1;
-    }
-    else if (pid == 0)
-        return handle_child_process(pipefd, shell_state);
-    else
-        return handle_parent_process(pipefd, pid, shell_state);
-}
+//     pid = fork();
+//     if (pid == -1)
+//     {
+//         perror("fork");
+//         return -1;
+//     }
+//     else if (pid == 0)
+//         return handle_child_process(pipefd, shell_state);
+//     else
+//         return handle_parent_process(pipefd, pid, shell_state);
+// }
 
 //function to handle the operations "<" ">" ">>" and "|"
-int ft_redir_iop(char *ops, t_shell_state *shell_state, t_cmd_token *token)
-{
-    int type = 0; // Initialize type (for redirection type, like TRUNC or APPEND)
+// int ft_redir_iop(char *ops, t_shell_state *shell_state, t_cmd_token *token)
+// {
+//     int type = 0; // Initialize type (for redirection type, like TRUNC or APPEND)
 
-    // Handle output redirection with ">" (truncate) and ">>" (append)
-    if (ft_strcmp(ops, ">") == 0)
-    {
-        type = TRUNC;
-        return (ft_redir_output(shell_state, token, type), 0);
-    }
-    else if (ft_strcmp(ops, ">>") == 0)
-    {
-        type = APPEND;
-        return (ft_redir_output(shell_state, token, type),0);
-    }
-    // Handle input redirection with "<"
-    else if (ft_strcmp(ops, "<") == 0)
-        return (ft_redir_input(shell_state, token),0);
-    // Handle piping with "|"
-    else if (ft_strcmp(ops, "|") == 0)
-        return ft_minipipe(shell_state);
-    else
-    {
-        // If the operation is not recognized, print an error
-        ft_putendl_fd("Error: Invalid operation", STDERR);
-        return -1;
-    }
+//     // Handle output redirection with ">" (truncate) and ">>" (append)
+//     if (ft_strcmp(ops, ">") == 0)
+//     {
+//         type = TRUNC;
+//         return (ft_redir_output(shell_state, token, type), 0);
+//     }
+//     else if (ft_strcmp(ops, ">>") == 0)
+//     {
+//         type = APPEND;
+//         return (ft_redir_output(shell_state, token, type),0);
+//     }
+//     // Handle input redirection with "<"
+//     else if (ft_strcmp(ops, "<") == 0)
+//         return (ft_redir_input(shell_state, token),0);
+//     // Handle piping with "|"
+//     else if (ft_strcmp(ops, "|") == 0)
+//         return ft_minipipe(shell_state);
+//     else
+//     {
+//         // If the operation is not recognized, print an error
+//         ft_putendl_fd("Error: Invalid operation", STDERR);
+//         return -1;
+//     }
+// }
+
+void	ft_redir(t_shell_state *shell_state, t_cmd_token *token, int type)
+{
+	ft_close(shell_state->output_fd);
+	if (type == TRUNC)
+		shell_state->output_fd = open(token->content, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+	else
+		shell_state->output_fd = open(token->content, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
+	if (shell_state->output_fd == -1)
+	{
+		ft_putstr_fd("minishell: ", STDERR);
+		ft_putstr_fd(token->content, STDERR);
+		ft_putendl_fd(": No such file or directory", STDERR);
+		shell_state->return_code = 1;
+		shell_state->should_skip_exec = 1;
+		return ;
+	}
+	dup2(shell_state->output_fd, STDOUT);
+}
+
+void	ft_input(t_shell_state *shell_state, t_cmd_token *token)
+{
+	ft_close(shell_state->input_fd);
+	shell_state->input_fd = open(token->content, O_RDONLY, S_IRWXU);
+	if (shell_state->input_fd == -1)
+	{
+		ft_putstr_fd("minishell: ", STDERR);
+		ft_putstr_fd(token->content, STDERR);
+		ft_putendl_fd(": No such file or directory", STDERR);
+		shell_state->return_code = 1;
+		shell_state->should_skip_exec = 1;
+		return ;
+	}
+	dup2(shell_state->input_fd, STDIN);
+}
+
+int		ft_mini_pipe(t_shell_state *shell_state)
+{
+	pid_t	pid;
+	int		pipefd[2];
+
+	pipe(pipefd);
+	pid = fork();
+	if (pid == 0)
+	{
+		ft_close(pipefd[1]);
+		dup2(pipefd[0], STDIN);
+		shell_state->pipe_input_fd = pipefd[0];
+		shell_state->proc_id = -1;
+		shell_state->is_parent_proc = 0;
+		shell_state->should_skip_exec = 0;
+		return (2);
+	}
+	else
+	{
+		ft_close(pipefd[0]);
+		dup2(pipefd[1], STDOUT);
+		shell_state->pipe_output_fd = pipefd[1];
+		shell_state->proc_id = pid;
+		shell_state->last_exit_stat = 0;
+		return (1);
+	}
 }
