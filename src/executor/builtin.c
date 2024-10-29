@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 21:22:53 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/25 15:39:07 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 17:15:09 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 // If the command is "unset", return 1.
 // If no match is found, return 0.
 
-int is_builtin(const char *command)
+int ft_is_builtin(char *command)
 {
     // Check if the command is one of the known built-in shell commands
     if (ft_strcmp(command, "echo") == 0)
@@ -90,7 +90,7 @@ int is_builtin(const char *command)
 // Call ft_unset() with the arguments and shell state structure.
 // Return the result of executing the built-in command.
 
-int exec_builtin(char **args, t_shell_state *shell_state)
+int ft_exec_builtin(char **args, t_shell_state *shell_state)
 {
     int result = 0;
 
@@ -104,7 +104,7 @@ int exec_builtin(char **args, t_shell_state *shell_state)
     else if (ft_strcmp(args[0], "env") == 0)
         result = ft_env(shell_state->active_env);
     else if (ft_strcmp(args[0], "export") == 0)
-        result = ft_export(args,shell_state->active_env, shell_state->secret_env);
+        result = ft_export(args, shell_state->active_env, shell_state->secret_env);
     else if (ft_strcmp(args[0], "unset") == 0)
         result = ft_unset(args, shell_state);
     else

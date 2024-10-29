@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 17:24:43 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:47:17 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:17:21 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * Return:
  * - The length of the return code as a string.
  */
-int ret_size(int ret)
+int ft_ret_size(int ret)
 {
     char *tmp;
     int ret_len;
@@ -53,7 +53,7 @@ int ret_size(int ret)
  * Return:
  * - The length of the environment variable's value as an integer.
  */
-int get_var_len(const char *arg, int pos, t_env_variable *env, int ret)
+int ft_get_var_len(const char *arg, int pos, t_env_variable *env, int ret)
 {
     char var_name[BUFF_SIZE];
     char *var_value;
@@ -61,10 +61,10 @@ int get_var_len(const char *arg, int pos, t_env_variable *env, int ret)
 
     i = 0;
     if (arg[pos] == '?')
-        return (ret_size(ret));
+        return (ft_ret_size(ret));
     if (ft_isdigit(arg[pos]))
         return (0);
-    while (arg[pos] && is_env_char(arg[pos]) == 1 && i < BUFF_SIZE)
+    while (arg[pos] && ft_is_env_char(arg[pos]) == 1 && i < BUFF_SIZE)
     {
         var_name[i] = arg[pos];
         pos++;
@@ -93,7 +93,7 @@ int get_var_len(const char *arg, int pos, t_env_variable *env, int ret)
  * Return:
  * - The total length of the expanded argument string as an integer.
  */
-int arg_alloc_len(const char *arg, t_env_variable *env, int ret)
+int ft_arg_alloc_len(const char *arg, t_env_variable *env, int ret)
 {
     int i;
     int size;
@@ -108,10 +108,10 @@ int arg_alloc_len(const char *arg, t_env_variable *env, int ret)
             if ((arg[i] == '\0' || ft_isalnum(arg[i]) == 0) && arg[i] != '?')
                 size++;
             else
-                size += get_var_len(arg, i, env, ret);
+                size += ft_get_var_len(arg, i, env, ret);
             if (ft_isdigit(arg[i]) == 0)
             {
-                while (arg[i + 1] && is_env_char(arg[i]))
+                while (arg[i + 1] && ft_is_env_char(arg[i]))
                     i++;
             }
             else
@@ -139,7 +139,7 @@ int arg_alloc_len(const char *arg, t_env_variable *env, int ret)
  * - A pointer to the string containing the variable's value.
  * - NULL if the variable name is invalid or not found.
  */
-char *get_var_value(const char *arg, int pos, t_env_variable *env, int ret)
+char *ft_get_var_value(const char *arg, int pos, t_env_variable *env, int ret)
 {
     char var_name[BUFF_SIZE];
     char *var_value;
@@ -153,7 +153,7 @@ char *get_var_value(const char *arg, int pos, t_env_variable *env, int ret)
     }
     if (ft_isdigit(arg[pos]))
         return (NULL);
-    while (arg[pos] && is_env_char(arg[pos]) == 1 && i < BUFF_SIZE)
+    while (arg[pos] && ft_is_env_char(arg[pos]) == 1 && i < BUFF_SIZE)
     {
         var_name[i] = arg[pos];
         pos++;

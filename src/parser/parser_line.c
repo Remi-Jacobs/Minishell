@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/27 23:33:27 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:15:15 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
  * - A pointer to the newly allocated string with extra space allocation.
  * - NULL if memory allocation fails.
  */
-char *space_alloc(char *line)
+char *ft_space_alloc(char *line)
 {
     char *new;
     int count;
@@ -36,7 +36,7 @@ char *space_alloc(char *line)
     i = 0;
     while (line[i])
     {
-        if (is_sep(line, i))
+        if (ft_is_sep(line, i))
             count++;
         i++;
     }
@@ -59,7 +59,7 @@ char *space_alloc(char *line)
  * - A pointer to the newly allocated and processed line with spaces around separators.
  * - NULL if memory allocation fails.
  */
-char *space_line(char *line)
+char *ft_space_line(char *line)
 {
     char *new;
     int i;
@@ -67,16 +67,16 @@ char *space_line(char *line)
 
     i = 0;
     j = 0;
-    new = space_alloc(line);
+    new = ft_space_alloc(line);
     while (new && line[i])
     {
-        if (quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
+        if (ft_quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
             new[j++] = (char)(-line[i++]);
-        else if (quotes(line, i) == 0 && is_sep(line, i))
+        else if (ft_quotes(line, i) == 0 && ft_is_sep(line, i))
         {
             new[j++] = ' ';
             new[j++] = line[i++];
-            if (quotes(line, i) == 0 && line[i] == '>')
+            if (ft_quotes(line, i) == 0 && line[i] == '>')
                 new[j++] = line[i++];
             new[j++] = ' ';
         }
@@ -102,9 +102,9 @@ char *space_line(char *line)
  * - 1 if there is an open quotes syntax error.
  * - 0 if no syntax error is detected.
  */
-int quote_check(t_shell_state *shell_state, char **line)
+int ft_quote_check(t_shell_state *shell_state, char **line)
 {
-    if (quotes(*line, 2147483647))
+    if (ft_quotes(*line, 2147483647))
     {
         ft_putendl_fd("syntax error with open quotes", STDERR);
         ft_memdel(*line);
@@ -161,58 +161,29 @@ void ft_parse_input(t_shell_state *shell_state)
         shell_state->return_code = global_sig.last_exit_stat;
 
     // Check for unclosed quotes
-    if (quote_check(shell_state, &line))
+    if (ft_quote_check(shell_state, &line))
         return;
 
     // Process the line to add spaces around separators
-    line = space_line(line);
+    line = ft_space_line(line);
 
     // Handle special case with '$' at the start of the line
     if (line && line[0] == '$')
         line[0] = (char)(-line[0]);
 
     // Tokenize the line and update the shell state
-    shell_state->cmd_list = get_tokens(line);
+    shell_state->cmd_list = ft_get_tokens(line);
     ft_memdel(line);
 
     // Adjust and squish the arguments in the token list
-    squish_args(shell_state);
+    ft_squish_args(shell_state);
 
     // Iterate through the tokens and handle arguments
     token = shell_state->cmd_list;
     while (token)
     {
-        if (is_type(token, ARG))
-            type_arg(token, 0);
+        if (ft_is_type(token, ARG))
+            ft_type_arg(token, 0);
         token = token->next;
     }
 }
-
-// void parse(t_shell_state *shell_state)
-// {
-//     char *line;
-//     t_cmd_token *token;
-
-//     signal(SIGINT, &ft_sig_integer);
-//     signal(SIGQUIT, &ft_sig_exit);
-//     shell_state->return_code ? ft_putstr_fd("🤬 ", STDERR) : ft_putstr_fd("😎 ", STDERR);
-//     ft_putstr_fd("\033[0;36m\033[1mminishell ▸ \033[0m", STDERR);
-//     if (get_next_line(0, &line) == -2 && (shell_state->should_exit = 1))
-//         ft_putendl_fd("exit", STDERR);
-//     shell_state->return_code = (global_sig.sigint_received == 1) ? global_sig.last_exit_stat : shell_state->return_code;
-//     if (quote_check(shell_state, &line))
-//         return;
-//     line = space_line(line);
-//     if (line && line[0] == '$')
-//         line[0] = (char)(-line[0]);
-//     shell_state->cmd_list = get_tokens(line);
-//     ft_memdel(line);
-//     squish_args(shell_state);
-//     token = shell_state->cmd_list;
-//     while (token)
-//     {
-//         if (is_type(token, ARG))
-//             type_arg(token, 0);
-//         token = token->next;
-//     }
-// }

@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:44:42 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/23 19:51:51 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/28 16:22:44 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  * - 1 if the token exists and its type matches the specified type.
  * - 0 otherwise.
  */
-int is_type(t_cmd_token *token, int type)
+int ft_is_type(t_cmd_token *token, int type)
 {
     if (token && token->type == type)
         return (1);
@@ -54,23 +54,23 @@ int is_type(t_cmd_token *token, int type)
  * - 1 if the token matches any of the types listed in the string.
  * - 0 otherwise.
  */
-int is_types(t_cmd_token *token, char *types)
+int ft_is_types(t_cmd_token *token, char *types)
 {
-    if (ft_strchr(types, ' ') && is_type(token, EMPTY))
+    if (ft_strchr(types, ' ') && ft_is_type(token, EMPTY))
         return (1);
-    else if (ft_strchr(types, 'X') && is_type(token, CMD))
+    else if (ft_strchr(types, 'X') && ft_is_type(token, CMD))
         return (1);
-    else if (ft_strchr(types, 'x') && is_type(token, ARG))
+    else if (ft_strchr(types, 'x') && ft_is_type(token, ARG))
         return (1);
-    else if (ft_strchr(types, 'T') && is_type(token, TRUNC))
+    else if (ft_strchr(types, 'T') && ft_is_type(token, TRUNC))
         return (1);
-    else if (ft_strchr(types, 'A') && is_type(token, APPEND))
+    else if (ft_strchr(types, 'A') && ft_is_type(token, APPEND))
         return (1);
-    else if (ft_strchr(types, 'I') && is_type(token, INPUT))
+    else if (ft_strchr(types, 'I') && ft_is_type(token, INPUT))
         return (1);
-    else if (ft_strchr(types, 'P') && is_type(token, PIPE))
+    else if (ft_strchr(types, 'P') && ft_is_type(token, PIPE))
         return (1);
-    else if (ft_strchr(types, 'E') && is_type(token, END))
+    else if (ft_strchr(types, 'E') && ft_is_type(token, END))
         return (1);
     return (0);
 }
@@ -88,11 +88,11 @@ int is_types(t_cmd_token *token, char *types)
  * - 1 if a token with the specified type is found in the list.
  * - 0 otherwise.
  */
-int has_type(t_cmd_token *token, int type)
+int ft_has_type(t_cmd_token *token, int type)
 {
     while (token)
     {
-        if (is_type(token, type))
+        if (ft_is_type(token, type))
             return (1);
         token = token->next;
     }
@@ -112,11 +112,11 @@ int has_type(t_cmd_token *token, int type)
  * - 1 if a pipe token is found before an end token.
  * - 0 otherwise.
  */
-int has_pipe(t_cmd_token *token)
+int ft_has_pipe(t_cmd_token *token)
 {
-    while (token && is_type(token, END) == 0)
+    while (token && ft_is_type(token, END) == 0)
     {
-        if (is_type(token, PIPE))
+        if (ft_is_type(token, PIPE))
             return (1);
         token = token->next;
     }
@@ -138,7 +138,7 @@ int has_pipe(t_cmd_token *token)
  * - A pointer to the next token of the specified type.
  * - NULL if no token of the specified type is found.
  */
-t_cmd_token *next_type(t_cmd_token *token, int type, int skip)
+t_cmd_token *ft_next_type(t_cmd_token *token, int type, int skip)
 {
     if (token && skip)
         token = token->next;

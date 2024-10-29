@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 20:44:20 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 21:11:47 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/28 18:15:55 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
  * Return:
  * - The number of characters copied from `env_value` into `new_arg`.
  */
-static int var_val_cpy(char *new_arg, const char *env_value, int pos)
+static int ft_var_val_cpy(char *new_arg, const char *env_value, int pos)
 {
     int i;
 
@@ -50,33 +50,14 @@ static int var_val_cpy(char *new_arg, const char *env_value, int pos)
  * variable identifiers. After inserting the value, it updates the index pointers in the structure 
  * to continue parsing.
  */
-// static void insert_var(t_expand_data *data, char *arg, t_env_variable *env, int ret)
-// {
-//     char *env_value;
 
-//     env_value = get_var_value(arg, data->dest_index, env, ret);
-//     data->src_index += env_value ? var_val_cpy(data->expanded_str, env_value, data->src_index) : 0;
-//     ft_memdel(env_value);
-//     arg[data->dest_index] == '?' ? data->dest_index++ : 0;
-//     if (ft_isdigit(arg[data->dest_index]) == 0 && arg[data->dest_index - 1] != '?')
-//     {
-//         while (is_env_char(arg[data->dest_index]) == 1)
-//             data->dest_index++;
-//     }
-//     else
-//     {
-//         if (arg[data->dest_index - 1] != '?')
-//             data->dest_index++;
-//     }
-// }
-
-static void insert_var(t_expand_data *data, char *arg, t_env_variable *env, int ret)
+static void ft_insert_var(t_expand_data *data, char *arg, t_env_variable *env, int ret)
 {
     char *env_value;
 
-    env_value = get_var_value(arg, data->dest_index, env, ret);
+    env_value = ft_get_var_value(arg, data->dest_index, env, ret);
     if (env_value)
-        data->src_index += var_val_cpy(data->expanded_str, env_value, data->src_index);
+        data->src_index += ft_var_val_cpy(data->expanded_str, env_value, data->src_index);
     else
         data->src_index += 0;
     ft_memdel(env_value);
@@ -84,7 +65,7 @@ static void insert_var(t_expand_data *data, char *arg, t_env_variable *env, int 
         data->dest_index++;
     if (ft_isdigit(arg[data->dest_index]) == 0 && arg[data->dest_index - 1] != '?')
     {
-        while (is_env_char(arg[data->dest_index]) == 1)
+        while (ft_is_env_char(arg[data->dest_index]) == 1)
             data->dest_index++;
     }
     else
@@ -112,12 +93,12 @@ static void insert_var(t_expand_data *data, char *arg, t_env_variable *env, int 
  * - NULL if memory allocation fails.
  */
 
-char *expansions(char *arg, t_env_variable *env, int ret)
+char *ft_expansions(char *arg, t_env_variable *env, int ret)
 {
     t_expand_data data;
     int new_arg_len;
 
-    new_arg_len = arg_alloc_len(arg, env, ret);
+    new_arg_len = ft_arg_alloc_len(arg, env, ret);
     if (!(data.expanded_str = malloc(sizeof(char) * new_arg_len + 1)))
         return NULL;
     data.src_index = 0;
@@ -131,35 +112,10 @@ char *expansions(char *arg, t_env_variable *env, int ret)
             if ((arg[data.dest_index] == '\0' || ft_isalnum(arg[data.dest_index]) == 0) && arg[data.dest_index] != '?')
                 data.expanded_str[data.src_index++] = '$';
             else
-                insert_var(&data, arg, env, ret);
+                ft_insert_var(&data, arg, env, ret);
         }
         data.expanded_str[data.src_index++] = arg[data.dest_index++];
     }
     data.expanded_str[data.src_index] = '\0';
     return data.expanded_str;
 }
-// char *expansions(char *arg, t_env_variable *env, int ret)
-// {
-//     t_expand_data data;
-//     int new_arg_len;
-
-//     new_arg_len = arg_alloc_len(arg, env, ret);
-//     if (!(data.expanded_str = malloc(sizeof(char) * new_arg_len + 1)))
-//         return (NULL);
-//     data.src_index = 0;
-//     data.dest_index = 0;
-//     while (data.src_index < new_arg_len && arg[data.dest_index])
-//     {
-//         while (arg[data.dest_index] == EXPANSION)
-//         {
-//             data.dest_index++;
-//             if ((arg[data.dest_index] == '\0' || ft_isalnum(arg[data.dest_index]) == 0) && arg[data.dest_index] != '?')
-//                 data.expanded_str[data.src_index++] = '$';
-//             else
-//                 insert_var(&data, arg, env, ret);
-//         }
-//         data.expanded_str[data.src_index++] = arg[data.dest_index++];
-//     }
-//     data.expanded_str[data.dest_index] = '\0';
-//     return (data.expanded_str);
-// }
