@@ -6,85 +6,55 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 16:40:55 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/09/09 16:41:17 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/30 15:44:39 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int			ft_found_error(int fd);
-static void			ft_free(char **str);
-static char			*ft_slice(char **str);
-
-char	*get_next_line(int fd)
+static int	initialize_line_check(int fd, char **line, char *buf)
 {
-	int			size;
-	char		*buffer;
-	char		*support;
-	static char	*string;
-
-	if (ft_found_error(fd))
-		return (NULL);
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	size = read(fd, buffer, BUFFER_SIZE);
-	while (size > 0)
-	{
-		buffer[size] = '\0';
-		if (!string)
-			string = ft_strdup(buffer);
-		else
-		{
-			support = ft_strjoin(string, buffer);
-			ft_free(&string);
-			string = support;
-		}
-		if (ft_strchr(string, '\n'))
-			break ;
-		size = read(fd, buffer, BUFFER_SIZE);
-	}
-	return (ft_free(&buffer), ft_slice(&string));
+	if (line == NULL || fd < 0 || BUFFER_SIZE < 1 || (read(fd, buf, 0)) < 0)
+		return (-1);
+	return (1);
 }
 
-//finds an error in input
-static int	ft_found_error(int fd)
+static int	process_newline_check(char **line, char **stock, int read_len)
 {
-	if (fd == -1 || BUFFER_SIZE <= 0)
+	if (newline_check(*stock, read_len) == 2)
+	{
+		*line = *stock;
+		return (-2);
+	}
+	*line = get_line(*stock);
+	if (*line == NULL)
+		return (-1);
+	*stock = stock_trim(*stock);
+	if (*stock == NULL)
+	{
+		ft_memdel(*stock);
+		return (-1);
+	}
+	if (read_len != 0)
 		return (1);
-	return (0);
+	else
+		return (0);
 }
 
-//de-allocate the memory
-static	void	ft_free(char **str)
+int	get_next_line(int fd, char **line)
 {
-	if (str && *str)
-	{
-		free(*str);
-		*str = NULL;
-	}
-}
+	int			read_len;
+	char		buf[BUFFER_SIZE + 1];
+	static char	*stock = NULL;
 
-//slice the string into pieces
-static char	*ft_slice(char **str)
-{
-	int		index;
-	char	*ret;
-	char	*sup;
-
-	index = 0;
-	if (!str[0])
-		return (NULL);
-	while (str[0][index] != '\n' && str[0][index] != '\0')
-		index++;
-	ret = ft_substr(str[0], 0, index + 1);
-	sup = ft_strdup(str[0]);
-	ft_free(str);
-	str[0] = ft_substr(sup, index + 1, ft_strlen(sup));
-	ft_free(&sup);
-	if (!ft_strchr(ret, '\n'))
+	if (initialize_line_check(fd, line, buf) == -1)
+		return (-1);
+	read_len = 1;
+	while (!newline_check(stock, read_len))
 	{
-		if (!ft_strlen(ret))
-			ft_free(&ret);
-		ft_free(str);
+		read_len = handle_read(fd, &stock, buf);
+		if (read_len == -1)
+			return (-1);
 	}
-	return (ret);
+	return (process_newline_check(line, &stock, read_len));
 }
