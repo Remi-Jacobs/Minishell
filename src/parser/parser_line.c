@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/28 18:15:15 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/30 15:51:12 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void ft_parse_input(t_shell_state *shell_state)
 
     // Get the next line of input and check for the exit condition
     //I put the char * cast so it would compile. This might need further adjustments
-    if (get_next_line(0) == (char *)-2)
+    if (get_next_line(0, &line) == -2 && (shell_state->should_exit = 1))
     {
         shell_state->should_exit = 1;
         ft_putendl_fd("exit", STDERR);
