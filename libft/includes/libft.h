@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 20:14:12 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 19:46:56 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/10/30 15:32:45 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,12 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 /****** Additional Functions Part 2 with malloc() ******/
-char	*get_next_line(int fd);
+int		newline_check(char *stock, int read_size);
+char	*buf_join(char *stock, char *buf);
+char	*stock_trim(char *stock);
+char	*get_line(char *stock);
+int		handle_read(int fd, char **stock, char *buf);
+int		get_next_line(int fd, char **line);
 void	ft_skip_spacenl(const char *str, int *i);
 
 #endif
