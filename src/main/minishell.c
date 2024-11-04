@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/29 11:31:41 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/04 10:13:39 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,36 +38,30 @@
  * @param token A pointer to the current command token to be processed.
  */
 
-t_sig_handler global_sig;
+t_sig_handler	global_sig;
 
-void ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
+void	ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
 {
-    t_cmd_token *prev;
-    t_cmd_token *next;
-    int pipe;
+	t_cmd_token	*prev;
+	t_cmd_token	*next;
+	int			pipe;
 
-    // Get the previous and next separator tokens for the current token.
-    prev = ft_prev_sep(cmd_token, NOSKIP);
-    next = ft_next_sep(cmd_token, NOSKIP);
-    pipe = 0;
-
-    // Handle output truncation, output append, input redirection, or pipe setup.
-    if (ft_is_type(prev, TRUNC))
-        ft_redir(shell_state, cmd_token, TRUNC);
-    else if (ft_is_type(prev, APPEND))
-        ft_redir(shell_state, cmd_token, APPEND);
-    else if (ft_is_type(prev, INPUT))
-        ft_input(shell_state, cmd_token);
-    else if (ft_is_type(prev, PIPE))
-        pipe = ft_mini_pipe(shell_state);
-    // If there is a next token and it's not an `END`, recursively process the next token.
-    if (next && ft_is_type(next, END) == 0 && pipe != 1)
-        ft_redir_and_exec(shell_state, next->next);
-    // If the command is standalone, follows an `END` or `PIPE`, and no pipe is set up,
-    // execute the command if the `no_exec` flag is not set.
-    if ((ft_is_type(prev, END) || ft_is_type(prev, PIPE) || !prev)
-        && pipe != 1 && shell_state->should_skip_exec == 0)
-        ft_exec_cmd(shell_state, cmd_token);
+	prev = ft_prev_sep(cmd_token, NOSKIP);
+	next = ft_next_sep(cmd_token, NOSKIP);
+	pipe = 0;
+	if (ft_is_type(prev, TRUNC))
+		ft_redir(shell_state, cmd_token, TRUNC);
+	else if (ft_is_type(prev, APPEND))
+		ft_redir(shell_state, cmd_token, APPEND);
+	else if (ft_is_type(prev, INPUT))
+		ft_input(shell_state, cmd_token);
+	else if (ft_is_type(prev, PIPE))
+		pipe = ft_mini_pipe(shell_state);
+	if (next && ft_is_type(next, END) == 0 && pipe != 1)
+		ft_redir_and_exec(shell_state, next->next);
+	if ((ft_is_type(prev, END) || ft_is_type(prev, PIPE) || !prev)
+		&& pipe != 1 && shell_state->should_skip_exec == 0)
+		ft_exec_cmd(shell_state, cmd_token);
 }
 
 /**
@@ -94,56 +88,39 @@ void ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
  *             shell state, including environment variables, file descriptors,
  *             and command tokens.
  */
-void ft_mini_shell(t_shell_state *shell_state)
+void	ft_mini_shell(t_shell_state *shell_state)
 {
-    t_cmd_token *cmd_token;
-    int     status;
-    
+	t_cmd_token	*cmd_token;
+	int			status;
 
-    // Get the first executable token and adjust if necessary.
-    // cmd_token = ft_next_exec(shell_state->cmd_list, NOSKIP);
-    cmd_token = ft_next_run(shell_state->cmd_list, NOSKIP);
-    if(ft_is_types(shell_state->cmd_list, "TAI"))
-        cmd_token = shell_state->cmd_list->next;
-    else
-        cmd_token = cmd_token;
-    // Main loop: Process tokens until `mini->exit` is set to non-zero.
-    while (shell_state->should_exit == 0 && cmd_token)
-    {
-        // Set flags for command execution.
-        shell_state->is_foreground = 1;   // Indicate that the current process is active.
-        shell_state->is_parent_proc = 1;   // Set to 1 to denote that the process is the parent.
-        shell_state->last_exit_stat = 1;     // Indicates that the command is the last executed.
-
-        // Handle redirections and execute the command.
-        ft_redir_and_exec(shell_state, cmd_token);
-
-        // Restore standard I/O, close, and reset file descriptors.
-        ft_reset_std(shell_state);
-        ft_close_fds(shell_state);
-        ft_reset_fds(shell_state);
-
-        // Wait for child processes and retrieve their exit status.
-        waitpid(-1, &status, 0);
-        status = WEXITSTATUS(status);
-        // Update return status based on the last executed command.
-        if(shell_state->last_exit_stat == 0)
-            shell_state->return_code = status;
-        else
-            shell_state->return_code = shell_state->last_exit_stat;
-        // If this is a child process, clean up and exit.
-        if (shell_state->is_parent_proc == 0)
-        {
-            ft_free_token(cmd_token);
-            exit(shell_state->return_code);
-        }
-        
-
-        // Reset execution flag and proceed to the next token.
-        shell_state->should_skip_exec = 0;
-        // cmd_token = ft_next_exec(cmd_token->next, NOSKIP);
-        cmd_token = ft_next_run(cmd_token->next, NOSKIP);
-    }
+	cmd_token = ft_next_run(shell_state->cmd_list, NOSKIP);
+	if (ft_is_types(shell_state->cmd_list, "TAI"))
+		cmd_token = shell_state->cmd_list->next;
+	else
+		cmd_token = cmd_token;
+	while (shell_state->should_exit == 0 && cmd_token)
+	{
+		shell_state->is_foreground = 1;
+		shell_state->is_parent_proc = 1;
+		shell_state->last_exit_stat = 1;
+		ft_redir_and_exec(shell_state, cmd_token);
+		ft_reset_std(shell_state);
+		ft_close_fds(shell_state);
+		ft_reset_fds(shell_state);
+		waitpid(-1, &status, 0);
+		status = WEXITSTATUS(status);
+		if (shell_state->last_exit_stat == 0)
+			shell_state->return_code = status;
+		else
+			shell_state->return_code = shell_state->return_code;
+		if (shell_state->is_parent_proc == 0)
+		{
+			ft_free_token(shell_state->cmd_list);
+			exit(shell_state->return_code);
+		}
+		shell_state->should_skip_exec = 0;
+		cmd_token = ft_next_run(cmd_token, SKIP);
+	}
 }
 
 
@@ -174,46 +151,29 @@ void ft_mini_shell(t_shell_state *shell_state)
 
 int	main(int argc, char **argv, char **envp)
 {
-    t_shell_state shell_state;
+	t_shell_state	shell_state;
 
-    (void)argc;
+	(void)argc;
 	(void)argv;
-    // Duplicate the standard input and output file descriptors to preserve them
-    shell_state.stdin_fd = dup(STDIN);
+	shell_state.stdin_fd = dup(STDIN);
 	shell_state.stdout_fd = dup(STDOUT);
-    // Initialize shell control variables
-    shell_state.should_exit = 0;  // Flag to control shell exit state
-    shell_state.return_code = 0;     // Store the return status of the last executed command
-    shell_state.should_skip_exec = 0;// Flag to indicate if commands should be executed
-
-    // Reset standard file descriptors to their initial state
-    ft_reset_fds(&shell_state);
-    // Initialize environment variables and increment the shell level (SHLVL)
-    ft_env_init(&shell_state, envp);
+	shell_state.should_exit = 0;
+	shell_state.return_code = 0;
+	shell_state.should_skip_exec = 0;
+	ft_reset_fds(&shell_state);
+	ft_env_init(&shell_state, envp);
 	ft_secret_env_init(&shell_state, envp);
-    ft_increment_shell_level(shell_state.active_env);
-
-    // Main interactive loop - continues until `mini.exit` is set to non-zero
-    while (shell_state.should_exit == 0)
-    {
-        // Set up signal handling (e.g., for Ctrl+C or Ctrl+\)
-        ft_sig_init();
-        // Parse user input into command tokens
-        ft_parse_input(&shell_state);
-        // Check if parsing succeeded and the input line is valid
-        if (shell_state.cmd_list != NULL && ft_check_line(&shell_state, shell_state.cmd_list))
-		{
-			// Execute the parsed commands
+	ft_increment_shell_level(shell_state.active_env);
+	while (shell_state.should_exit == 0)
+	{
+		ft_sig_init();
+		ft_parse_input(&shell_state);
+		if (shell_state.cmd_list != NULL
+			&& ft_check_line(&shell_state, shell_state.cmd_list))
 			ft_mini_shell(&shell_state);
-		}
-        // Free the memory allocated for tokens after processing
-        ft_free_token(shell_state.cmd_list);
-    }
-
-    // Free all allocated environment variables before exiting
-    ft_free_env(shell_state.active_env);
-    ft_free_env(shell_state.secret_env);
-
-    // Return the exit status of the last executed command
-    return (shell_state.return_code);
+		ft_free_token(shell_state.cmd_list);
+	}
+	ft_free_env(shell_state.active_env);
+	ft_free_env(shell_state.secret_env);
+	return (shell_state.return_code);
 }
