@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 17:46:03 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/04 09:54:45 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_sig_exit(int signal)
 	nbr = ft_itoa(signal);
 	if (global_sig.child_proc_id != 0)
 	{
-		ft_putstr_fd("\b\b \b\b", STDERR);
+		ft_putstr_fd("Quit:", STDERR);
 		ft_putendl_fd(nbr, STDERR);
 		global_sig.last_exit_stat = 131;
 		global_sig.sigquit_received = 1;
@@ -51,6 +51,6 @@ void	ft_sig_init(void)
 {
 	global_sig.sigint_received = 0;
 	global_sig.sigquit_received = 0;
-	global_sig.last_exit_stat = 0;
 	global_sig.child_proc_id = 0;
+	global_sig.last_exit_stat = 0;
 }
