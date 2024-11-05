@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+         #
+#    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/10/27 23:22:33 by ojacobs          ###   ########.fr        #
+#    Updated: 2024/11/05 14:12:34 by dsamuel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,8 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I include/ -I libft/includes/
 
 LIBFT = -L libft -lft
+
+LIBS = -lreadline -lhistory
 
 HEADER = minishell.h
 
@@ -50,7 +52,7 @@ $(NAME): $(OBJ)
 	@echo "\n"
 	@make -C libft/
 	@echo "\033[0;32mCompiling minishell..."
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) $(LIBS)
 	@echo "\n\033[0mDone !"
 
 %.o: %.c

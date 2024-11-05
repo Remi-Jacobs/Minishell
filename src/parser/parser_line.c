@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/30 15:51:12 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/05 14:09:18 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,23 +147,28 @@ void ft_parse_input(t_shell_state *shell_state)
         ft_putstr_fd("😎 ", STDERR);
 
     // Print the shell prompt
-    ft_putstr_fd("\033[0;36m\033[1mminishell ▸ \033[0m", STDERR);
-
+    // ft_putstr_fd("\033[0;36m\033[1mminishell ▸ \033[0m", STDERR); chng 1
+    line = readline("\033[0;36m\033[1mminishell ▸ \033[0m");
     // Get the next line of input and check for the exit condition
-    //I put the char * cast so it would compile. This might need further adjustments
-    if (get_next_line(0, &line) == -2 && (shell_state->should_exit = 1))
+    //  change 2
+    if (!line)
     {
         shell_state->should_exit = 1;
         ft_putendl_fd("exit", STDERR);
+        return ;
     }
+    if (*line)
+        add_history(line);
     // Update the return code if an interrupt signal was received
     if (global_sig.sigint_received == 1)
         shell_state->return_code = global_sig.last_exit_stat;
 
     // Check for unclosed quotes
     if (ft_quote_check(shell_state, &line))
-        return;
-
+    {
+        ft_memdel(line);
+        return ;
+    }
     // Process the line to add spaces around separators
     line = ft_space_line(line);
 
