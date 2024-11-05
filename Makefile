@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
+#    By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/11/05 14:12:34 by dsamuel          ###   ########.fr        #
+#    Updated: 2024/11/05 19:10:08 by ojacobs          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,8 @@ BUILTINS = cd echo env exit export pwd unset
 
 ENV = env_vars get_env shell_val_level sort_env
 
+HISTORY = history
+
 EXECUTOR = command executor builtin
 
 MAIN = minishell redirections
@@ -43,6 +45,7 @@ SRC = $(addsuffix .c, $(addprefix src/builtins/, $(BUILTINS))) \
 	  $(addsuffix .c, $(addprefix src/parser/, $(PARSER))) \
 	  $(addsuffix .c, $(addprefix src/utils/, $(UTILS))) \
 	  $(addsuffix .c, $(addprefix src/signals/, $(SIGNALS))) \
+	  $(addsuffix .c, $(addprefix src/history/, $(HISTORY))) \
 
 OBJ = $(SRC:c=o)
 
