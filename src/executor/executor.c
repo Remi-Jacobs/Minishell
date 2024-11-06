@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:17:41 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/28 17:57:14 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:36:42 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ void	ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token)
 		ft_mini_exit(shell_state, cmd);
 	else if (cmd && ft_is_builtin(cmd[0]))
 		shell_state->return_code = ft_exec_builtin(cmd, shell_state);
+	else if (cmd && ft_strcmp(cmd[0], "history") == 0)
+		shell_state->return_code = ft_print_history(shell_state);
 	else if (cmd)
 		shell_state->return_code = ft_exec_bin(cmd, shell_state->active_env, shell_state);
 	ft_free_tab(cmd);

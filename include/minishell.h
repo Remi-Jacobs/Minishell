@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/29 11:44:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:37:39 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@
 # define SUCCESS 0
 # define IS_DIRECTORY 126
 # define UNKNOWN_CMD 127
+
+#define MAX_HISTORY 100  // Maximum number of history entries
 
 /*
 ** Structure for storing a command token (e.g., a command, argument, pipe, etc.).
@@ -118,6 +120,8 @@ typedef struct s_shell_state
 	int				return_code;
 	int				should_exit;
 	int				should_skip_exec;
+	int				history_count;
+	char			*history[MAX_HISTORY];
 }				t_shell_state;
 
 /*
@@ -260,6 +264,12 @@ int			ft_arg_alloc_len(const char *arg, t_env_variable *env, int ret);
 char		*ft_get_var_value(const char *arg, int pos,
 				t_env_variable *env, int ret);
 
+/*
+** HISTORY
+*/
+void		ft_my_add_history(const char *command, t_shell_state *shell_state);
+int			ft_print_history(t_shell_state *shell_state);
+void		ft_free_history(t_shell_state shell_state);
 /*
 ** External functions
 */

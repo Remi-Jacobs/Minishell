@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/04 10:13:39 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:39:53 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ int	main(int argc, char **argv, char **envp)
 	shell_state.should_exit = 0;
 	shell_state.return_code = 0;
 	shell_state.should_skip_exec = 0;
+	shell_state.history_count = 0;
 	ft_reset_fds(&shell_state);
 	ft_env_init(&shell_state, envp);
 	ft_secret_env_init(&shell_state, envp);
@@ -173,6 +174,7 @@ int	main(int argc, char **argv, char **envp)
 			ft_mini_shell(&shell_state);
 		ft_free_token(shell_state.cmd_list);
 	}
+	ft_free_history(shell_state);
 	ft_free_env(shell_state.active_env);
 	ft_free_env(shell_state.secret_env);
 	return (shell_state.return_code);

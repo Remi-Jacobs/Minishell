@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/05 14:09:18 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:37:16 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,10 @@ void ft_parse_input(t_shell_state *shell_state)
         return ;
     }
     if (*line)
+    {
         add_history(line);
+        ft_my_add_history(line, shell_state);
+    }
     // Update the return code if an interrupt signal was received
     if (global_sig.sigint_received == 1)
         shell_state->return_code = global_sig.last_exit_stat;
