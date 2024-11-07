@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:37:40 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/28 16:30:57 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/07 15:47:32 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@
  * - A pointer to the next separator token (`TRUNC` or greater) in the list.
  * - NULL if no separator is found.
  */
-t_cmd_token *ft_next_sep(t_cmd_token *token, int skip)
+t_cmd_token	*ft_next_sep(t_cmd_token *token, int skip)
 {
-    if (token && skip)
-        token = token->next;
-    while (token && token->type < TRUNC)
-        token = token->next;
-    return (token);
+	if (token && skip)
+		token = token->next;
+	while (token && token->type < TRUNC)
+		token = token->next;
+	return (token);
 }
 
 /**
@@ -52,13 +52,13 @@ t_cmd_token *ft_next_sep(t_cmd_token *token, int skip)
  * - A pointer to the previous separator token (`TRUNC` or greater) in the list.
  * - NULL if no separator is found.
  */
-t_cmd_token *ft_prev_sep(t_cmd_token *token, int skip)
+t_cmd_token	*ft_prev_sep(t_cmd_token *token, int skip)
 {
-    if (token && skip)
-        token = token->prev;
-    while (token && token->type < TRUNC)
-        token = token->prev;
-    return (token);
+	if (token && skip)
+		token = token->prev;
+	while (token && token->type < TRUNC)
+		token = token->prev;
+	return (token);
 }
 
 /**
@@ -76,17 +76,17 @@ t_cmd_token *ft_prev_sep(t_cmd_token *token, int skip)
  * - A pointer to the next command token (`CMD`) in the list.
  * - NULL if no command token is found.
  */
-t_cmd_token *ft_next_run(t_cmd_token *token, int skip)
+t_cmd_token	*ft_next_run(t_cmd_token *token, int skip)
 {
-    if (token && skip)
-        token = token->next;
-    while (token && token->type != CMD)
-    {
-        token = token->next;
-        if (token && token->type == CMD && token->prev == NULL)
-            ;
-        else if (token && token->type == CMD && token->prev->type < END)
-            token = token->next;
-    }
-    return (token);
+	if (token && skip)
+		token = token->next;
+	while (token && token->type != CMD)
+	{
+		token = token->next;
+		if (token && token->type == CMD && token->prev == NULL)
+			;
+		else if (token && token->type == CMD && token->prev->type < END)
+			token = token->next;
+	}
+	return (token);
 }
