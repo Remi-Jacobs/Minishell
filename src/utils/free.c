@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 19:37:29 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 19:40:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/07 16:28:47 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,10 @@ void	ft_free_tab(char **tab)
 	}
 	if (tab)
 		ft_memdel(tab);
+}
+
+int	ft_clear(void)
+{
+	write(STDOUT, "\033[H\033[J", 6);
+	return (0);
 }

@@ -6,15 +6,16 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 16:04:46 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/29 16:49:13 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/07 15:18:21 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int ft_print_err_export(int return_err, const char *arg)
+static int	ft_print_err_export(int return_err, const char *arg)
 {
-	int i;
+	int	i;
+
 	if (return_err == -1)
 		ft_putstr_fd("export: not a valid identifier: ", STDERR);
 	else if (return_err == 0 || return_err == -3)
@@ -29,16 +30,18 @@ static int ft_print_err_export(int return_err, const char *arg)
 	return (ERROR);
 }
 
-int ft_add_to_env(const char *args, t_env_variable *env)
+int	ft_add_to_env(const char *args, t_env_variable *env)
 {
 	t_env_variable	*new_env;
 	t_env_variable	*tmp;
+
 	if (env && env->variable == NULL)
 	{
 		env->variable = ft_strdup(args);
 		return (SUCCESS);
 	}
-	if (!(new_env = malloc(sizeof(t_env_variable))))
+	new_env = malloc(sizeof(t_env_variable));
+	if (!new_env)
 		return (-1);
 	new_env->variable = ft_strdup(args);
 	while (env && env->next && env->next->next)
@@ -49,7 +52,7 @@ int ft_add_to_env(const char *args, t_env_variable *env)
 	return (SUCCESS);
 }
 
-char		*ft_get_env_name(char *dest, const char *src)
+char	*ft_get_env_name(char *dest, const char *src)
 {
 	int		i;
 
@@ -63,7 +66,7 @@ char		*ft_get_env_name(char *dest, const char *src)
 	return (dest);
 }
 
-int			ft_is_in_env(t_env_variable *env, char *args)
+int	ft_is_in_env(t_env_variable *env, char *args)
 {
 	char	var_name[BUFF_SIZE];
 	char	env_name[BUFF_SIZE];
@@ -83,12 +86,11 @@ int			ft_is_in_env(t_env_variable *env, char *args)
 	return (SUCCESS);
 }
 
-
 int	ft_export(char **args, t_env_variable *env, t_env_variable *secret)
 {
 	int	new_env;
 	int	error_ret;
-	
+
 	new_env = 0;
 	if (!args[1])
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/05 19:37:39 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/07 19:28:03 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@
 # define SUCCESS 0
 # define IS_DIRECTORY 126
 # define UNKNOWN_CMD 127
-
-#define MAX_HISTORY 100  // Maximum number of history entries
+# define MAX_HISTORY 100
 
 /*
 ** Structure for storing a command token (e.g., a command, argument, pipe, etc.).
@@ -251,6 +250,7 @@ int			ft_check_line(t_shell_state *shell_state, t_cmd_token *token);
 void		ft_free_token(t_cmd_token *start);
 void		ft_free_env(t_env_variable *env);
 void		ft_free_tab(char **tab);
+int			ft_clear(void);
 
 void		ft_close(int fd);
 void		ft_reset_std(t_shell_state *shell_state);

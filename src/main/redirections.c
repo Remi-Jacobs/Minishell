@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 15:28:09 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/04 10:32:12 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/07 19:11:50 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,17 @@ void	ft_redir(t_shell_state *shell_state, t_cmd_token *token, int type)
 
 void	ft_input(t_shell_state *shell_state, t_cmd_token *token)
 {
+	if (ft_strcmp(token->content, "<") == 0)
+	{
+		if (token->next == NULL || token->next->type >= TRUNC)
+		{
+			ft_putstr_fd("syntax error near unexpected token `newline'\n", STDERR);
+			shell_state->return_code = 258;
+			shell_state->should_skip_exec = 1;
+			return ;
+		}
+		token = token->next;
+	}
 	ft_close(shell_state->input_fd);
 	shell_state->input_fd = open(token->content, O_RDONLY, S_IRWXU);
 	if (shell_state->input_fd == -1)
@@ -43,6 +54,7 @@ void	ft_input(t_shell_state *shell_state, t_cmd_token *token)
 		ft_putstr_fd(token->content, STDERR);
 		ft_putendl_fd(": No such file or directory", STDERR);
 		shell_state->return_code = 1;
+		printf("Token content: %s, type: %d\n", token->content, token->type);
 		shell_state->should_skip_exec = 1;
 		return ;
 	}
@@ -76,3 +88,38 @@ int	ft_mini_pipe(t_shell_state *shell_state)
 		return (1);
 	}
 }
+
+// int ft_mini_pipe(t_shell_state *shell_state)
+// {
+//     int pipe_fd[2];
+//     pid_t pid;
+
+//     pipe(pipe_fd);
+//     pid = fork();
+//     if (pid == 0)
+//     {
+//         // Child process
+//         ft_close(pipe_fd[1]);
+//         dup2(pipe_fd[0], STDIN);
+//         ft_close(pipe_fd[0]);  // Close unused fd after dup2
+//         shell_state->pipe_input_fd = pipe_fd[0];
+//         shell_state->proc_id = -1;
+//         shell_state->is_parent_proc = 0;
+//         shell_state->should_skip_exec = 0;
+
+//         // Execute the command and exit after completion
+//         ft_exec_cmd(shell_state, shell_state->cmd_list);
+//         exit(shell_state->return_code);
+//     }
+//     else
+//     {
+//         // Parent process
+//         ft_close(pipe_fd[0]);
+//         dup2(pipe_fd[1], STDOUT);
+//         ft_close(pipe_fd[1]);  // Close unused fd after dup2
+//         shell_state->pipe_output_fd = pipe_fd[1];
+//         shell_state->proc_id = pid;
+//         shell_state->last_exit_stat = 0;
+//         return 1;
+//     }
+// }
