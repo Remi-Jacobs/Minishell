@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/08 19:31:54 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/09 21:18:08 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
 		ft_redir(shell_state, cmd_token, TRUNC);
 	else if (ft_is_type(prev, APPEND))
 		ft_redir(shell_state, cmd_token, APPEND);
+	else if (ft_is_type(prev, HERE_DOC))
+		ft_here_doc(shell_state, cmd_token);
 	else if (ft_is_type(prev, INPUT))
 		ft_input(shell_state, cmd_token);
 	else if (ft_is_type(prev, PIPE))
