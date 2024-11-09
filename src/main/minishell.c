@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 18:25:36 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/08 19:31:54 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,5 +177,6 @@ int	main(int argc, char **argv, char **envp)
 	ft_free_history(shell_state);
 	ft_free_env(shell_state.active_env);
 	ft_free_env(shell_state.secret_env);
+	ft_memdel(shell_state.tilde);
 	return (shell_state.return_code);
 }

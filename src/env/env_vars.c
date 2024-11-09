@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_vars.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:16:19 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/10/22 18:54:36 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/08 19:58:18 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,25 @@ int ft_env_init(t_shell_state *shell_state, char **env_array)
     return (0);
 }
 
+
+static void  ft_get_home_directory(t_shell_state *shell_state, char **envp)
+{
+    	int	i;
+
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "HOME=", 5) != 0)
+		i++;
+	if (envp[i] && ft_strncmp(envp[i], "HOME=", 5) == 0)
+	{
+        shell_state->tilde = ft_strdup (&envp[i][5]);
+		if (!shell_state->tilde)
+		{
+			perror("erro copying home");
+			exit(EXIT_FAILURE);
+		}
+    }
+}
+
 /**
  * secret_env_init - Initializes the secret environment linked list from an array of environment variables.
  * 
@@ -156,5 +175,6 @@ int ft_secret_env_init(t_shell_state *shell_state, char **env_array)
         env = new;
         i++;
     }
+    ft_get_home_directory(shell_state, env_array);
     return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 15:34:33 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/08 19:24:50 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,12 @@ void	ft_parse_input(t_shell_state *shell_state)
 		shell_state->return_code = global_sig.last_exit_stat;
 	else
 		shell_state->return_code = shell_state->return_code;
+	if (line && line[0] == '~')
+    {
+        char *expanded_line = ft_strjoin(shell_state->tilde, line + 1);
+        ft_memdel(line);
+        line = expanded_line;
+    }
 	if (ft_quote_check(shell_state, &line))
 	{
 		ft_memdel(line);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 19:44:43 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/29 16:44:55 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/08 19:28:08 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	ft_print_error(char **args)
 	ft_putendl_fd(args[1], STDERR);
 }
 
-static  char  *ft_get_env_path(t_env_variable *env, const char *var, size_t len)
+char  *ft_get_env_path(t_env_variable *env, const char *var, size_t len)
 {
 	char  *old_pwd;
 	int  i;
@@ -69,6 +69,21 @@ static int ft_update_old_pwd(t_env_variable *env)
 	return (SUCCESS);
 }
 
+static int	ft_update_pwd(t_env_variable *env)
+{
+	char	cwd[PATH_MAX];
+	char	*new_pwd;
+
+	if (getcwd(cwd, PATH_MAX) == NULL)
+		return (ERROR);
+	if (!(new_pwd = ft_strjoin("PWD=", cwd)))
+		return (ERROR);
+	if (ft_is_in_env(env, new_pwd) == SUCCESS)
+		ft_add_to_env(new_pwd, env);
+	ft_memdel(new_pwd);
+	return (SUCCESS);
+}
+
 static int	ft_go_to_path(int is_old, t_env_variable *env)
 {
 	int 	return_cd;
@@ -77,7 +92,7 @@ static int	ft_go_to_path(int is_old, t_env_variable *env)
 	path = NULL;
 	if (is_old == 0)
 	{
-		ft_update_old_pwd(env);
+		// ft_update_old_pwd(env); - this might not be neccesary as it makes OLDPWD inaccurate when HOME is unset(to be discussed)
 		path = ft_get_env_path(env, "HOME", 4);
 		if (!path)
 			ft_putendl_fd("cd: HOME not set", STDERR);
@@ -99,25 +114,70 @@ static int	ft_go_to_path(int is_old, t_env_variable *env)
 	return (return_cd);
 }
 
-int	ft_cd(char **args, t_env_variable *env)
+// int	ft_cd(char **args, t_env_variable *env)
+// {
+// 	int		return_cd;
+
+// 	if (!args[1])
+// 		return (ft_go_to_path(0, env));
+// 	if (ft_strcmp(args[1], "-") == 0)
+// 		return_cd = ft_go_to_path(1, env);
+// 	else
+// 	{
+// 		ft_update_old_pwd(env);
+// 		return_cd = chdir(args[1]);
+// 		if (return_cd < 0)
+// 			return_cd *= -1;
+// 		if (return_cd == 0)
+// 			ft_update_pwd(env);
+// 		if (return_cd != 0)
+// 			ft_print_error(args);
+// 	}
+// 	return (return_cd);
+// }
+int	ft_cd(char **args, t_shell_state *shell_state)
 {
 	int		return_cd;
+	char	*path;
 
+	// If no arguments, go to home directory
 	if (!args[1])
-		return (ft_go_to_path(0, env));
+		return (ft_go_to_path(0, shell_state->active_env));
+
+	// If argument is "-", go to the previous directory
 	if (ft_strcmp(args[1], "-") == 0)
-		return_cd = ft_go_to_path(1, env);
+		return_cd = ft_go_to_path(1, shell_state->active_env);
+
+	// Check if argument starts with '~'
+	else if (args[1][0] == '~')
+	{
+		// Replace '~' with the home directory path
+		path = ft_strjoin(shell_state->tilde, &args[1][1]);
+
+		// Update the old PWD and change directory
+		ft_update_old_pwd(shell_state->active_env);
+		return_cd = chdir(path);
+
+		// Free the memory allocated for the new path
+		ft_memdel(path);
+	}
+
+	// Otherwise, just attempt to change to the specified directory
 	else
 	{
-		ft_update_old_pwd(env);
+		ft_update_old_pwd(shell_state->active_env);
 		return_cd = chdir(args[1]);
-		if (return_cd < 0)
-			return_cd *= -1;
-		if (return_cd != 0)
-			ft_print_error(args);
 	}
+
+	// Update PWD if successful
+	if (return_cd == 0)
+		ft_update_pwd(shell_state->active_env);
+	else if (return_cd != 0)
+		ft_print_error(args);
+
 	return (return_cd);
 }
+
 
 //These are all for the main to test this function. They may eventually be useful for other funtions
 

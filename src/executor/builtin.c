@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 21:22:53 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/07 16:27:04 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/08 19:30:14 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_exec_builtin(char **args, t_shell_state *shell_state)
 	if (ft_strcmp(args[0], "echo") == 0)
 		result = ft_echo(args);
 	if (ft_strcmp(args[0], "cd") == 0)
-		result = ft_cd(args, shell_state->active_env);
+		result = ft_cd(args, shell_state);
 	if (ft_strcmp(args[0], "pwd") == 0)
 		result = ft_pwd();
 	if (ft_strcmp(args[0], "env") == 0)

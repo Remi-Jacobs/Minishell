@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 19:28:03 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/08 19:42:11 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ typedef struct s_shell_state
 	int				should_skip_exec;
 	int				history_count;
 	char			*history[MAX_HISTORY];
+	char			*tilde;
 }				t_shell_state;
 
 /*
@@ -154,7 +155,9 @@ typedef struct s_expand_data
 /*
 ** BUILTINS
 */
-int			ft_cd(char **args, t_env_variable *env);
+// int			ft_cd(char **args, t_env_variable *env);
+int	ft_cd(char **args, t_shell_state *shell_state);
+char  *ft_get_env_path(t_env_variable *env, const char *var, size_t len);
 int			ft_echo(char **args);
 int			ft_env(t_env_variable *env);
 void		ft_mini_exit(t_shell_state *shell_state, char **cmd_args);
@@ -214,6 +217,7 @@ int			ft_str_env_len(char **env);
 void		ft_sort_env(char **tab, int env_len);
 void		ft_print_sorted_env(t_env_variable *env);
 void		ft_increment_shell_level(t_env_variable *env);
+// void 		*ft_get_home_directory(t_shell_state *shell_state);
 /*
 ** RE_DIRECTIONS
 */
