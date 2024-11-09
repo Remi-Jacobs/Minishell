@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:44:42 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 15:46:34 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/09 18:44:22 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	ft_is_type(t_cmd_token *token, int type)
  * - `'I'` for INPUT
  * - `'P'` for PIPE
  * - `'E'` for END
+ * - `'H'` for HERE_DOC
  * 
  * Return:
  * - 1 if the token matches any of the types listed in the string.
@@ -59,19 +60,21 @@ int	ft_is_types(t_cmd_token *token, char *types)
 		return (1);
 	else if (ft_strchr(types, 'E') && ft_is_type(token, END))
 		return (1);
+	else if (ft_strchr(types, 'H') && ft_is_type(token, HERE_DOC))
+		return (1);
 	return (0);
 }
 
-int	ft_has_type(t_cmd_token *token, int type)
-{
-	while (token)
-	{
-		if (ft_is_type(token, type))
-			return (1);
-		token = token->next;
-	}
-	return (0);
-}
+// int	ft_has_type(t_cmd_token *token, int type)
+// {
+// 	while (token)
+// 	{
+// 		if (ft_is_type(token, type))
+// 			return (1);
+// 		token = token->next;
+// 	}
+// 	return (0);
+// }
 
 int	ft_has_pipe(t_cmd_token *token)
 {
@@ -84,11 +87,11 @@ int	ft_has_pipe(t_cmd_token *token)
 	return (0);
 }
 
-t_cmd_token	*ft_next_type(t_cmd_token *token, int type, int skip)
-{
-	if (token && skip)
-		token = token->next;
-	while (token && token->type != type)
-		token = token->next;
-	return (token);
-}
+// t_cmd_token	*ft_next_type(t_cmd_token *token, int type, int skip)
+// {
+// 	if (token && skip)
+// 		token = token->next;
+// 	while (token && token->type != type)
+// 		token = token->next;
+// 	return (token);
+// }

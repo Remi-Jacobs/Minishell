@@ -6,19 +6,36 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 19:25:41 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/09 21:02:26 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// int	ft_ignore_sep(char *line, int i)
+// {
+// 	if (line[i] == '\\' && line[i + 1])
+// 	{
+// 		if (line[i + 1] == ';' || line[i + 1] == '|' || line[i + 1] == '>')
+// 		{
+// 			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
+// 				return (1);
+// 			return (1);
+// 		}
+// 	}
+// 	return (0);
+// }
+
 int	ft_ignore_sep(char *line, int i)
 {
 	if (line[i] == '\\' && line[i + 1])
 	{
-		if (line[i + 1] == ';' || line[i + 1] == '|' || line[i + 1] == '>')
+		if (line[i + 1] == ';' || line[i + 1] == '|'
+			|| line[i + 1] == '>' || line[i + 1] == '<')
 		{
 			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
+				return (1);
+			if (line[i + 1] == '<' && line[i + 2] && line[i + 2] == '<')
 				return (1);
 			return (1);
 		}
@@ -79,7 +96,7 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 	while (token)
 	{
 		if (ft_is_types(token, "TAI")
-			&& (!token->next || ft_is_types(token->next, "TAIPE")))
+			&& (!token->next || ft_is_types(token->next, "TAIPEH")))
 		{
 			ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
 			if (token->next)
@@ -90,9 +107,9 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 			shell_state->return_code = 258;
 			return (0);
 		}
-		if (ft_is_types(token, "PE")
+		if (ft_is_types(token, "PEH")
 			&& (!token->prev || !token->next
-				|| ft_is_types(token->prev, "TAIPE")))
+				|| ft_is_types(token->prev, "TAIPEH")))
 		{
 			ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
 			ft_putstr_fd(token->content, STDERR);
