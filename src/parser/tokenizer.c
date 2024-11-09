@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:23:49 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 16:09:33 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/09 21:21:55 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@
  * This function analyzes the string of the given token and assigns an appropriate type 
  * based on the content. It checks if the token matches specific separators like ">", ">>", "<", "|", 
  * or ";". If the token is not after a separator and matches a specific string, it is assigned a type 
- * such as `TRUNC`, `APPEND`, `INPUT`, `PIPE`, or `END`. If the token does not match any of these conditions, 
+ * such as `TRUNC`, `APPEND`, `INPUT`, `PIPE`, or `END` `HERE_DOC. If the token does not match any of these conditions, 
  * it assigns the token as either a command (`CMD`) or an argument (`ARG`).
  */
-void ft_type_arg(t_cmd_token *token, int separator)
+void	ft_type_arg(t_cmd_token *token, int separator)
 {
 	if (ft_strcmp(token->content, "") == 0)
 		token->type = EMPTY;
+	else if (ft_strcmp(token->content, "<<") == 0 && separator == 0)
+		token->type = HERE_DOC;
 	else if (ft_strcmp(token->content, ">") == 0 && separator == 0)
 		token->type = TRUNC;
 	else if (ft_strcmp(token->content, ">>") == 0 && separator == 0)
@@ -191,6 +193,35 @@ t_cmd_token	*ft_next_token(char *line, int *i)
  * Return:
  * - A pointer to the head of the linked list of tokens.
  */
+// t_cmd_token	*ft_get_tokens(char *line)
+// {
+// 	t_cmd_token	*prev;
+// 	t_cmd_token	*next;
+// 	int			i;
+// 	int			sep;
+
+// 	prev = NULL;
+// 	next = NULL;
+// 	i = 0;
+// 	ft_skip_spacenl(line, &i);
+// 	while (line[i])
+// 	{
+// 		sep = ft_ignore_sep(line, i);
+// 		next = ft_next_token(line, &i);
+// 		next->prev = prev;
+// 		if (prev)
+// 			prev->next = next;
+// 		prev = next;
+// 		ft_type_arg(next, sep);
+// 		ft_skip_spacenl(line, &i);
+// 	}
+// 	if (next)
+// 		next->next = NULL;
+// 	while (next && next->prev)
+// 		next = next->prev;
+// 	return (next);
+// }
+
 t_cmd_token	*ft_get_tokens(char *line)
 {
 	t_cmd_token	*prev;
@@ -204,14 +235,34 @@ t_cmd_token	*ft_get_tokens(char *line)
 	ft_skip_spacenl(line, &i);
 	while (line[i])
 	{
-		sep = ft_ignore_sep(line, i);
-		next = ft_next_token(line, &i);
-		next->prev = prev;
-		if (prev)
-			prev->next = next;
-		prev = next;
-		ft_type_arg(next, sep);
-		ft_skip_spacenl(line, &i);
+		if (line[i] == '<' && line[i + 1] == '<')
+		{
+			next = malloc(sizeof(t_cmd_token));
+			if (!next)
+				return (NULL);
+			next->content = ft_strdup("<<");
+			if (!next->content)
+			{
+				free(next);
+				return (NULL);
+			}
+
+			next->type = HERE_DOC;
+			next->next = NULL;
+			next->prev = NULL;
+			i += 2;
+		}
+		else
+		{
+			sep = ft_ignore_sep(line, i);
+			next = ft_next_token(line, &i);
+			next->prev = prev;
+			if (prev)
+				prev->next = next;
+			prev = next;
+			ft_type_arg(next, sep);
+			ft_skip_spacenl(line, &i);
+		}
 	}
 	if (next)
 		next->next = NULL;
