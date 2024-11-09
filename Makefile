@@ -6,7 +6,7 @@
 #    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/11/06 17:10:16 by dsamuel          ###   ########.fr        #
+#    Updated: 2024/11/09 16:08:50 by dsamuel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ EXECUTOR = command executor builtin
 
 MAIN = minishell redirections
 
-PARSER = parser_line expansions tokenizer
+PARSER = parser_line expansions tokenizer here_doc
 
 UTILS = expansion free fd parsing token type
 
