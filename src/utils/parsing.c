@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/09 21:02:26 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/13 16:49:05 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 	while (token)
 	{
 		if (ft_is_types(token, "TAI")
-			&& (!token->next || ft_is_types(token->next, "TAIPEH")))
+			&& (!token->next || ft_is_types(token->next, "TAIPE")))
 		{
-			ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
+			ft_putstr_fd("bash2: syntax error near unexpected token `", STDERR);
 			if (token->next)
 				ft_putstr_fd(token->next->content, STDERR);
 			else
@@ -107,11 +107,11 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 			shell_state->return_code = 258;
 			return (0);
 		}
-		if (ft_is_types(token, "PEH")
+		if (ft_is_types(token, "PE")
 			&& (!token->prev || !token->next
-				|| ft_is_types(token->prev, "TAIPEH")))
+				|| ft_is_types(token->prev, "TAIPE")))
 		{
-			ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
+			ft_putstr_fd("bashmini: syntax error near unexpected token `", STDERR);
 			ft_putstr_fd(token->content, STDERR);
 			ft_putendl_fd("'", STDERR);
 			shell_state->return_code = 258;

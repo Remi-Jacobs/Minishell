@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/09 21:21:35 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/14 17:56:19 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,10 @@ void	ft_parse_input(t_shell_state *shell_state)
 	token = shell_state->cmd_list;
 	while (token)
 	{
+
 		if (ft_is_type(token, ARG))
 			ft_type_arg(token, 0);
 		token = token->next;
 	}
+	shell_state->here_doc_triggered = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:45:39 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/09 21:28:13 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/14 17:55:45 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
 	int temp_fd;
 	
 	// Get the delimiter from the next token content
-	if (!token || !token->next)
-		return;
-	delimiter = token->next->content;
+	if (!token)
+	{
+		write(2,"nothing in token\n",18);
+		return ;
+	}
+	delimiter = token->content;
 	printf("Delimiter: %s\n", delimiter);
-
+	
 	// Create a temporary file for the here-doc
 	temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (temp_fd == -1)
