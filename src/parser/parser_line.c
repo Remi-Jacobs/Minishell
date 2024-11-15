@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/14 17:56:19 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/15 19:12:08 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*ft_space_line(char *line)
 	new = ft_space_alloc(line);
 	while (new && line[i])
 	{
-		if (ft_quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
+    	if (ft_quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
 			new[j++] = (char)(-line[i++]);
 		else if (ft_quotes(line, i) == 0 && ft_is_sep(line, i))
 		{
@@ -179,7 +179,6 @@ void	ft_parse_input(t_shell_state *shell_state)
 	token = shell_state->cmd_list;
 	while (token)
 	{
-
 		if (ft_is_type(token, ARG))
 			ft_type_arg(token, 0);
 		token = token->next;

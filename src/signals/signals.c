@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/04 09:54:45 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/15 19:32:14 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_sig_integer(int signal)
 	{
 		ft_putstr_fd("\b\b", STDERR);
 		ft_putstr_fd("\n", STDERR);
-		ft_putstr_fd("\033[0;36m\033[1m minishell ▸ \033[0m", STDERR);
+		ft_putstr_fd("\033[0;36m\033[1m😎 minishell ▸ \033[0m", STDERR);
 		global_sig.last_exit_stat = 1;
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/14 17:58:07 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/15 20:11:44 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,18 @@ void ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
     t_cmd_token *prev;
     t_cmd_token *next;
     int pipe;
-    shell_state->here_doc_triggered += 2;  // Flag to track if here-doc has been triggered
+    // shell_state->here_doc_triggered += 2;  // Flag to track if here-doc has been triggered
 
     prev = ft_prev_sep(cmd_token, NOSKIP);
     next = ft_next_sep(cmd_token, NOSKIP);
     pipe = 0;
 
     // Ensure here-doc is triggered only once
-    if (ft_is_type(prev, HERE_DOC) && (shell_state->here_doc_triggered % 2) == 0 )
+    if (ft_is_type(prev, HERE_DOC) && shell_state->here_doc_triggered == 0 )
     {
+		shell_state->here_doc_triggered = 1;  // Mark as triggered
         ft_here_doc(shell_state, cmd_token);  // Trigger here-doc
-        shell_state->here_doc_triggered += 1;  // Mark as triggered
+        // shell_state->here_doc_triggered += 1;  // Mark as triggered
     }
     else if (ft_is_type(prev, TRUNC))
         ft_redir(shell_state, cmd_token, TRUNC);
