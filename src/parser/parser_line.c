@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/08 19:24:50 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/15 19:12:08 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,35 @@ char	*ft_space_alloc(char *line)
  * - A pointer to the newly allocated and processed line with spaces around separators.
  * - NULL if memory allocation fails.
  */
+// char	*ft_space_line(char *line)
+// {
+// 	char	*new;
+// 	int		i;
+// 	int		j;
+
+// 	i = 0;
+// 	j = 0;
+// 	new = ft_space_alloc(line);
+// 	while (new && line[i])
+// 	{
+// 		if (ft_quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
+// 			new[j++] = (char)(-line[i++]);
+// 		else if (ft_quotes(line, i) == 0 && ft_is_sep(line, i))
+// 		{
+// 			new[j++] = ' ';
+// 			new[j++] = line[i++];
+// 			if (ft_quotes(line, i) == 0 && line[i] == '>')
+// 				new[j++] = line[i++];
+// 			new[j++] = ' ';
+// 		}
+// 		else
+// 			new[j++] = line[i++];
+// 	}
+// 	new[j] = '\0';
+// 	ft_memdel(line);
+// 	return (new);
+// }
+
 char	*ft_space_line(char *line)
 {
 	char	*new;
@@ -70,13 +99,15 @@ char	*ft_space_line(char *line)
 	new = ft_space_alloc(line);
 	while (new && line[i])
 	{
-		if (ft_quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
+    	if (ft_quotes(line, i) != 2 && line[i] == '$' && i && line[i - 1] != '\\')
 			new[j++] = (char)(-line[i++]);
 		else if (ft_quotes(line, i) == 0 && ft_is_sep(line, i))
 		{
 			new[j++] = ' ';
 			new[j++] = line[i++];
-			if (ft_quotes(line, i) == 0 && line[i] == '>')
+			if (line[i - 1] == '>' && line[i] == '>')
+				new[j++] = line[i++];
+			else if (line[i - 1] == '<' && line[i] == '<')
 				new[j++] = line[i++];
 			new[j++] = ' ';
 		}
@@ -152,4 +183,5 @@ void	ft_parse_input(t_shell_state *shell_state)
 			ft_type_arg(token, 0);
 		token = token->next;
 	}
+	shell_state->here_doc_triggered = 0;
 }

@@ -3,22 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 19:25:41 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/13 16:49:05 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// int	ft_ignore_sep(char *line, int i)
+// {
+// 	if (line[i] == '\\' && line[i + 1])
+// 	{
+// 		if (line[i + 1] == ';' || line[i + 1] == '|' || line[i + 1] == '>')
+// 		{
+// 			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
+// 				return (1);
+// 			return (1);
+// 		}
+// 	}
+// 	return (0);
+// }
+
 int	ft_ignore_sep(char *line, int i)
 {
 	if (line[i] == '\\' && line[i + 1])
 	{
-		if (line[i + 1] == ';' || line[i + 1] == '|' || line[i + 1] == '>')
+		if (line[i + 1] == ';' || line[i + 1] == '|'
+			|| line[i + 1] == '>' || line[i + 1] == '<')
 		{
 			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
+				return (1);
+			if (line[i + 1] == '<' && line[i + 2] && line[i + 2] == '<')
 				return (1);
 			return (1);
 		}
@@ -81,7 +98,7 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 		if (ft_is_types(token, "TAI")
 			&& (!token->next || ft_is_types(token->next, "TAIPE")))
 		{
-			ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
+			ft_putstr_fd("bash2: syntax error near unexpected token `", STDERR);
 			if (token->next)
 				ft_putstr_fd(token->next->content, STDERR);
 			else
@@ -94,7 +111,7 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 			&& (!token->prev || !token->next
 				|| ft_is_types(token->prev, "TAIPE")))
 		{
-			ft_putstr_fd("bash: syntax error near unexpected token `", STDERR);
+			ft_putstr_fd("bashmini: syntax error near unexpected token `", STDERR);
 			ft_putstr_fd(token->content, STDERR);
 			ft_putendl_fd("'", STDERR);
 			shell_state->return_code = 258;

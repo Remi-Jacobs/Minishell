@@ -6,7 +6,7 @@
 /*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/08 19:42:11 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/14 17:55:16 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define INPUT 5
 # define PIPE 6
 # define END 7
+# define HERE_DOC 8
 
 # define STDIN 0
 # define STDOUT 1
@@ -122,6 +123,7 @@ typedef struct s_shell_state
 	int				history_count;
 	char			*history[MAX_HISTORY];
 	char			*tilde;
+	int				here_doc_triggered;
 }				t_shell_state;
 
 /*
@@ -183,6 +185,7 @@ void		ft_squish_args(t_shell_state *shell_state);
 int			ft_next_alloc(char *line, int *i);
 t_cmd_token	*ft_next_token(char *line, int *i);
 t_cmd_token	*ft_get_tokens(char *line);
+void		ft_here_doc(t_shell_state *shell_state, t_cmd_token *token);
 
 /*
 ** EXECUTOR
