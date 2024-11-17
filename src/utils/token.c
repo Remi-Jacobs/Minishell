@@ -6,27 +6,12 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:37:40 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 15:47:32 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 19:37:21 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * next_sep - Finds the next separator token in the command token list.
- * 
- * @token: A pointer to the current command token (t_cmd_token) being examined.
- * @skip: An integer indicating whether to skip the current token.
- * 
- * This function iterates through the list of command tokens starting from the given `token`. 
- * If `skip` is non-zero, it moves to the next token before checking. It then continues to 
- * iterate until it finds a token of type greater than or equal to `TRUNC`, which indicates 
- * a separator. It returns a pointer to the found separator token or `NULL` if none is found.
- * 
- * Return:
- * - A pointer to the next separator token (`TRUNC` or greater) in the list.
- * - NULL if no separator is found.
- */
 t_cmd_token	*ft_next_sep(t_cmd_token *token, int skip)
 {
 	if (token && skip)
@@ -36,22 +21,6 @@ t_cmd_token	*ft_next_sep(t_cmd_token *token, int skip)
 	return (token);
 }
 
-/**
- * prev_sep - Finds the previous separator token in the command token list.
- * 
- * @token: A pointer to the current command token (t_cmd_token) being examined.
- * @skip: An integer indicating whether to skip the current token.
- * 
- * This function iterates through the list of command tokens starting from the given `token`. 
- * If `skip` is non-zero, it moves to the previous token before checking. It then continues 
- * to iterate backward until it finds a token of type greater than or equal to `TRUNC`, 
- * which indicates a separator. It returns a pointer to the found separator token or `NULL` 
- * if none is found.
- * 
- * Return:
- * - A pointer to the previous separator token (`TRUNC` or greater) in the list.
- * - NULL if no separator is found.
- */
 t_cmd_token	*ft_prev_sep(t_cmd_token *token, int skip)
 {
 	if (token && skip)
@@ -61,21 +30,6 @@ t_cmd_token	*ft_prev_sep(t_cmd_token *token, int skip)
 	return (token);
 }
 
-/**
- * next_run - Finds the next command token in the command token list.
- * 
- * @token: A pointer to the current command token (t_cmd_token) being examined.
- * @skip: An integer indicating whether to skip the current token.
- * 
- * This function iterates through the list of command tokens starting from the given `token`. 
- * If `skip` is non-zero, it moves to the next token before checking. It continues iterating 
- * until it finds a token of type `CMD`. If the command token is found and it has a preceding 
- * token of type less than `END`, it moves forward to find the next command token.
- * 
- * Return:
- * - A pointer to the next command token (`CMD`) in the list.
- * - NULL if no command token is found.
- */
 t_cmd_token	*ft_next_run(t_cmd_token *token, int skip)
 {
 	if (token && skip)

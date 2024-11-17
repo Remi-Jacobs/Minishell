@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:44:42 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/09 18:44:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 19:52:36 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,6 @@ int	ft_is_type(t_cmd_token *token, int type)
 		return (0);
 }
 
-/**
- * is_types - Checks if the token is of any type listed in the given string.
- * 
- * @token: A pointer to the command token (t_cmd_token) to be checked.
- * @types: A string containing characters that represent different token types.
- * 
- * This function checks if the provided `token` matches any of the types specified in the 
- * `types` string. Each character in the string corresponds to a particular type:
- * - `' '` for EMPTY
- * - `'X'` for CMD
- * - `'x'` for ARG
- * - `'T'` for TRUNC
- * - `'A'` for APPEND
- * - `'I'` for INPUT
- * - `'P'` for PIPE
- * - `'E'` for END
- * - `'H'` for HERE_DOC
- * 
- * Return:
- * - 1 if the token matches any of the types listed in the string.
- * - 0 otherwise.
- */
 int	ft_is_types(t_cmd_token *token, char *types)
 {
 	if (ft_strchr(types, ' ') && ft_is_type(token, EMPTY))
@@ -65,17 +43,6 @@ int	ft_is_types(t_cmd_token *token, char *types)
 	return (0);
 }
 
-// int	ft_has_type(t_cmd_token *token, int type)
-// {
-// 	while (token)
-// 	{
-// 		if (ft_is_type(token, type))
-// 			return (1);
-// 		token = token->next;
-// 	}
-// 	return (0);
-// }
-
 int	ft_has_pipe(t_cmd_token *token)
 {
 	while (token && ft_is_type(token, END) == 0)
@@ -87,11 +54,19 @@ int	ft_has_pipe(t_cmd_token *token)
 	return (0);
 }
 
-// t_cmd_token	*ft_next_type(t_cmd_token *token, int type, int skip)
-// {
-// 	if (token && skip)
-// 		token = token->next;
-// 	while (token && token->type != type)
-// 		token = token->next;
-// 	return (token);
-// }
+int	ft_ignore_sep(char *line, int i)
+{
+	if (line[i] == '\\' && line[i + 1])
+	{
+		if (line[i + 1] == ';' || line[i + 1] == '|'
+			|| line[i + 1] == '>' || line[i + 1] == '<')
+		{
+			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
+				return (1);
+			if (line[i + 1] == '<' && line[i + 2] && line[i + 2] == '<')
+				return (1);
+			return (1);
+		}
+	}
+	return (0);
+}

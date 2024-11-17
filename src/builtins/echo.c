@@ -6,23 +6,11 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:31:30 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/29 16:54:48 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 18:39:07 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*here the implementation of the echo I think this works a bit better
-**
- * @brief Built-in command that echoes the arguments to the standard output.
- *
- * The `echo` command writes the arguments passed to it to the standard output.
- * If the `-n` option is provided as the first argument, the trailing newline
- * character is omitted. The command is a built-in function and does not require
- * a separate process to execute.
- *
- * @param args An array of strings containing the command arguments.
- */
 
 static int	nb_args(char **args)
 {
@@ -34,8 +22,43 @@ static int	nb_args(char **args)
 	return (size);
 }
 
+int	ft_add_to_env(const char *args, t_env_variable *env)
+{
+	t_env_variable	*new_env;
+	t_env_variable	*tmp;
 
-int				ft_echo(char **args)
+	if (env && env->variable == NULL)
+	{
+		env->variable = ft_strdup(args);
+		return (SUCCESS);
+	}
+	new_env = malloc(sizeof(t_env_variable));
+	if (!new_env)
+		return (-1);
+	new_env->variable = ft_strdup(args);
+	while (env && env->next && env->next->next)
+		env = env->next;
+	tmp = env->next;
+	env->next = new_env;
+	new_env->next = tmp;
+	return (SUCCESS);
+}
+
+char	*ft_get_env_name(char *dest, const char *src)
+{
+	int		i;
+
+	i = 0;
+	while (src[i] && src[i] != '=' && ft_strlen(src) < BUFF_SIZE)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+int	ft_echo(char **args)
 {
 	int		i;
 	int		n_option;
@@ -61,27 +84,3 @@ int				ft_echo(char **args)
 		write(1, "\n", 1);
 	return (SUCCESS);
 }
-
-// int	ft_echo(char **args)
-// {
-// 	int		i;
-// 	int		n_flag;
-
-// 	i = 1;
-// 	n_flag = 0;
-// 	while (nb_args(args) > 1 && ft_strcmp(args[i], "-n") == 0)
-// 	{
-// 		n_flag = 1;
-// 		i++;
-// 	}
-// 	while (args[i])
-// 	{
-// 		ft_putstr_fd(args[i], STDOUT);
-// 		if (args[i + 1] && args[i][0] != '\0')
-// 			write(1, " ", 1);
-// 		i++;
-// 	}
-// 	if (n_flag == 0)
-// 		write(1, "\n", 1);
-// 	return (SUCCESS);
-// }

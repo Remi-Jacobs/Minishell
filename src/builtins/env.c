@@ -6,13 +6,83 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 22:07:35 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/29 16:53:16 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 18:42:12 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//This is a similar implementation considering our t_env_varaible
+char	*ft_get_env_path(t_env_variable *env, const char *var, size_t len)
+{
+	char	*old_pwd;
+	size_t	s_alloc;
+
+	while (env && env->next)
+	{
+		if (ft_strncmp(env->variable, var, len) == 0)
+		{
+			s_alloc = ft_strlen(env->variable) - len;
+			old_pwd = malloc(s_alloc + 1);
+			if (!old_pwd)
+				return (NULL);
+			ft_strlcpy(old_pwd, env->variable + len, s_alloc + 1);
+			return (old_pwd);
+		}
+		env = env->next;
+	}
+	return (NULL);
+}
+
+// char	*ft_get_env_path(t_env_variable *env, const char *var, size_t len)
+// {
+// 	char	*old_pwd;
+// 	int		i;
+// 	int		j;
+// 	int		s_alloc;
+
+// 	while (env && env->next != NULL)
+// 	{
+// 		if (ft_strncmp(env->variable, var, len) == 0)
+// 		{
+// 			s_alloc = ft_strlen(env->variable) - len;
+// 			old_pwd = malloc(sizeof(char) * s_alloc + 1);
+// 			if (!old_pwd)
+// 				return (NULL);
+// 			i = 0;
+// 			j = 0;
+// 			while (env->variable[i++])
+// 			{
+// 				if (i > (int)len)
+// 					old_pwd[j++] = env->variable[i];
+// 			}
+// 			old_pwd[j] = '\0';
+// 			return (old_pwd);
+// 		}
+// 		env = env->next;
+// 	}
+// 	return (NULL);
+// }
+
+int	ft_is_in_env(t_env_variable *env, char *args)
+{
+	char	var_name[BUFF_SIZE];
+	char	env_name[BUFF_SIZE];
+
+	ft_get_env_name(var_name, args);
+	while (env && env->next)
+	{
+		ft_get_env_name(env_name, env->variable);
+		if (ft_strcmp(var_name, env_name) == 0)
+		{
+			ft_memdel(env->variable);
+			env->variable = ft_strdup(args);
+			return (1);
+		}
+		env = env->next;
+	}
+	return (SUCCESS);
+}
+
 int	ft_env(t_env_variable *env)
 {
 	while (env && env->next != NULL)
@@ -24,9 +94,3 @@ int	ft_env(t_env_variable *env)
 		ft_putendl(env->variable);
 	return (SUCCESS);
 }
-
-
-// int main(int argc, char **av, char **envp)
-// {
-// 	int res = ft_env(envp);
-// }

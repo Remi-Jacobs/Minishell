@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 22:25:18 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/10/28 18:14:28 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 17:36:02 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ int	ft_magic_box(char *path, char **args, t_env_variable *env, t_shell_state *sh
 	int		ret;
 
 	ret = SUCCESS;
-	global_sig.child_proc_id = fork();
+	g_global_sig.child_proc_id = fork();
 
-	if (global_sig.child_proc_id == 0)  // Child process
+	if (g_global_sig.child_proc_id == 0)  // Child process
 	{
 		// Convert environment variables to a string format and split them into an array
 		env_string = ft_env_to_str(env);
@@ -69,12 +69,12 @@ int	ft_magic_box(char *path, char **args, t_env_variable *env, t_shell_state *sh
 	else  // Parent process
 	{
 		// Wait for the child process to finish and retrieve its exit status
-		waitpid(global_sig.child_proc_id, &ret, 0);
+		waitpid(g_global_sig.child_proc_id, &ret, 0);
 	}
 
 	// Check if a signal was received (SIGINT or SIGQUIT) and return the last exit status
-	if (global_sig.sigint_received == 1 || global_sig.sigquit_received == 1)
-		return (global_sig.last_exit_stat);
+	if (g_global_sig.sigint_received == 1 || g_global_sig.sigquit_received == 1)
+		return (g_global_sig.last_exit_stat);
 
 	// Normalize the return value based on specific codes
 	if (ret == 32256 || ret == 32512)
