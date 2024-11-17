@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 15:28:09 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/09 21:20:35 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 18:23:12 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	ft_input(t_shell_state *shell_state, t_cmd_token *token)
 	{
 		if (token->next == NULL || token->next->type >= TRUNC)
 		{
-			ft_putstr_fd("syntax error near unexpected token `newline'\n", STDERR);
+			ft_putstr_fd("syntax error near unexpected token `newline'\n", \
+			STDERR);
 			shell_state->return_code = 258;
 			shell_state->should_skip_exec = 1;
 			return ;

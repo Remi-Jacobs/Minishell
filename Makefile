@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
+#    By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/11/09 16:08:50 by dsamuel          ###   ########.fr        #
+#    Updated: 2024/11/18 00:46:20 by ojacobs          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ MAIN = minishell redirections
 
 PARSER = parser_line expansions tokenizer here_doc
 
-UTILS = expansion free fd parsing token type
+UTILS = expansion free fd parsing token type execute
 
 SIGNALS = signals
 

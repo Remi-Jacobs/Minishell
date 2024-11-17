@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/17 17:34:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/18 00:39:17 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,9 @@ int			ft_next_alloc(char *line, int *i);
 t_cmd_token	*ft_next_token(char *line, int *i);
 t_cmd_token	*ft_get_tokens(char *line);
 void		ft_here_doc(t_shell_state *shell_state, t_cmd_token *token);
+void		ft_squish_helper(t_shell_state *shell_state,
+				t_cmd_token *token, t_cmd_token *prev);
+t_cmd_token	*ft_finalize_token_list(t_cmd_token *last_token);
 
 /*
 ** EXECUTOR
@@ -238,6 +241,8 @@ int			ft_get_var_len(const char *arg, int pos,
 int			ft_arg_alloc_len(const char *arg, t_env_variable *env, int ret);
 char		*ft_get_var_value(const char *arg, int pos,
 				t_env_variable *env, int ret);
+int			ft_execute_command(char *path, char **args, t_env_variable *env, \
+			t_shell_state *shell_state);
 
 /*
 ** HISTORY

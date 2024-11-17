@@ -6,27 +6,11 @@
 /*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 00:17:41 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/14 17:51:06 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/17 18:19:36 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * cmd_tab - Creates an array of strings (command table) from a linked list of tokens.
- * 
- * @start: A pointer to the starting token (t_cmd_token) for creating the command table.
- * 
- * This function iterates through a linked list of tokens starting from `start` and 
- * creates an array of strings (`tab`). It stops adding tokens when it encounters a 
- * token with a type greater than or equal to `TRUNC` (indicating a redirection or separator). 
- * The resulting array contains all token strings in the linked list up to this point, 
- * and the final element of the array is set to `NULL`.
- * 
- * Return:
- * - A pointer to an array of strings containing the command and its arguments.
- * - NULL if memory allocation fails or if the `start` token is `NULL`.
- */
 
 char	**ft_cmd_tab(t_cmd_token *start)
 {
@@ -43,7 +27,8 @@ char	**ft_cmd_tab(t_cmd_token *start)
 		token = token->next;
 		i++;
 	}
-	if (!(tab = malloc(sizeof(char *) * i)))
+	tab = malloc(sizeof(char *) * i);
+	if (!tab)
 		return (NULL);
 	token = start->next;
 	tab[0] = start->content;
@@ -53,26 +38,18 @@ char	**ft_cmd_tab(t_cmd_token *start)
 		tab[i++] = token->content;
 		token = token->next;
 	}
-	tab[i] = NULL;
-	return (tab);
+	return (tab[i] = NULL, tab);
 }
 
-/**
- * exec_cmd - Executes a command token by expanding and running the command.
- * 
- * @shell_state: A pointer to the shell state structure (t_shell_state) containing environment variables and other state details.
- * @token: A pointer to the token (t_cmd_token) containing the command to be executed.
- * 
- * This function first converts the linked list of tokens into an array of strings using 
- * `cmd_tab()`. It then iterates through the array to expand any environment variables using 
- * the `expansions()` function. Depending on the command (`cmd`), it performs the following:
- * - If the command is `"exit"` and there is no active pipe, it exits the shell using `mini_exit()`.
- * - If the command is a built-in command, it executes it using `exec_builtin()`.
- * - Otherwise, it executes external binaries using `exec_bin()`.
- * 
- * After execution, the function frees the allocated memory for the command array and closes 
- * any active pipes. It also resets the relevant state in the `mini` structure.
- */
+static void	ft_exec_cmd_close(t_shell_state *shell_state, char **cmd)
+{
+	ft_free_tab(cmd);
+	ft_close(shell_state->pipe_input_fd);
+	ft_close(shell_state->pipe_output_fd);
+	shell_state->pipe_input_fd = -1;
+	shell_state->pipe_output_fd = -1;
+	shell_state->is_foreground = 0;
+}
 
 void	ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token)
 {
@@ -85,7 +62,8 @@ void	ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token)
 	i = 0;
 	while (cmd && cmd[i])
 	{
-		cmd[i] = ft_expansions(cmd[i], shell_state->active_env, shell_state->return_code);
+		cmd[i] = ft_expansions(cmd[i], shell_state->active_env, \
+		shell_state->return_code);
 		i++;
 	}
 	if (cmd && ft_strcmp(cmd[0], "exit") == 0 && ft_has_pipe(token) == 0)
@@ -95,11 +73,7 @@ void	ft_exec_cmd(t_shell_state *shell_state, t_cmd_token *token)
 	else if (cmd && ft_strcmp(cmd[0], "history") == 0)
 		shell_state->return_code = ft_print_history(shell_state);
 	else if (cmd)
-		shell_state->return_code = ft_exec_bin(cmd, shell_state->active_env, shell_state);
-	ft_free_tab(cmd);
-	ft_close(shell_state->pipe_input_fd);
-	ft_close(shell_state->pipe_output_fd);
-	shell_state->pipe_input_fd = -1;
-	shell_state->pipe_output_fd = -1;
-	shell_state->is_foreground = 0;
+		shell_state->return_code = ft_exec_bin(cmd, \
+		shell_state->active_env, shell_state);
+	ft_exec_cmd_close(shell_state, cmd);
 }
