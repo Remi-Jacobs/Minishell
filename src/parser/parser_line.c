@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/15 19:12:08 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 17:36:31 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,8 @@ void	ft_parse_input(t_shell_state *shell_state)
 		add_history(line);
 		ft_my_add_history(line, shell_state);
 	}
-	if (global_sig.sigint_received == 1)
-		shell_state->return_code = global_sig.last_exit_stat;
+	if (g_global_sig.sigint_received == 1)
+		shell_state->return_code = g_global_sig.last_exit_stat;
 	else
 		shell_state->return_code = shell_state->return_code;
 	if (line && line[0] == '~')

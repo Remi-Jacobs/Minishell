@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/15 20:11:44 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/17 17:38:15 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
  * @param token A pointer to the current command token to be processed.
  */
 
-t_sig_handler	global_sig;
+t_sig_handler	g_global_sig;
 
 
 void ft_redir_and_exec(t_shell_state *shell_state, t_cmd_token *cmd_token)
