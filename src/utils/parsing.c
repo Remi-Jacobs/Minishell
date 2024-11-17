@@ -3,45 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/13 16:49:05 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/17 20:02:22 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int	ft_ignore_sep(char *line, int i)
-// {
-// 	if (line[i] == '\\' && line[i + 1])
-// 	{
-// 		if (line[i + 1] == ';' || line[i + 1] == '|' || line[i + 1] == '>')
-// 		{
-// 			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
-// 				return (1);
-// 			return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
-
-int	ft_ignore_sep(char *line, int i)
-{
-	if (line[i] == '\\' && line[i + 1])
-	{
-		if (line[i + 1] == ';' || line[i + 1] == '|'
-			|| line[i + 1] == '>' || line[i + 1] == '<')
-		{
-			if (line[i + 1] == '>' && line[i + 2] && line[i + 2] == '>')
-				return (1);
-			if (line[i + 1] == '<' && line[i + 2] && line[i + 2] == '<')
-				return (1);
-			return (1);
-		}
-	}
-	return (0);
-}
 
 int	ft_quotes(char *line, int index)
 {
@@ -91,6 +60,21 @@ int	ft_is_sep(char *line, int i)
 	return (0);
 }
 
+static int	ft_check_syntax_error(t_shell_state *shell_state,
+		t_cmd_token *token, char *types, char *unexpected_types)
+{
+	if (ft_is_types(token, types) && (!token->prev
+			|| !token->next || ft_is_types(token->prev, unexpected_types)))
+	{
+		ft_putstr_fd("mini: syntax error near unexpected token `", STDERR);
+		ft_putstr_fd(token->content, STDERR);
+		ft_putendl_fd("'", STDERR);
+		shell_state->return_code = 258;
+		return (0);
+	}
+	return (1);
+}
+
 int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 {
 	while (token)
@@ -98,7 +82,7 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 		if (ft_is_types(token, "TAI")
 			&& (!token->next || ft_is_types(token->next, "TAIPE")))
 		{
-			ft_putstr_fd("bash2: syntax error near unexpected token `", STDERR);
+			ft_putstr_fd("mini: syntax error near unexpected token `", STDERR);
 			if (token->next)
 				ft_putstr_fd(token->next->content, STDERR);
 			else
@@ -107,17 +91,39 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 			shell_state->return_code = 258;
 			return (0);
 		}
-		if (ft_is_types(token, "PE")
-			&& (!token->prev || !token->next
-				|| ft_is_types(token->prev, "TAIPE")))
-		{
-			ft_putstr_fd("bashmini: syntax error near unexpected token `", STDERR);
-			ft_putstr_fd(token->content, STDERR);
-			ft_putendl_fd("'", STDERR);
-			shell_state->return_code = 258;
+		if (!ft_check_syntax_error(shell_state, token, "PE", "TAIPE"))
 			return (0);
-		}
 		token = token->next;
 	}
 	return (1);
 }
+
+// int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
+// {
+// 	while (token)
+// 	{
+// 		if (ft_is_types(token, "TAI") 
+// 			&& (!token->next || ft_is_types(token->next, "TAIPE")))
+// 		{
+// 			ft_putstr_fd("mini: syntax error near unexpected token `", STDERR);
+// 			if (token->next)
+// 				ft_putstr_fd(token->next->content, STDERR);
+// 			else
+// 				ft_putstr_fd("newline", STDERR);
+// 			ft_putendl_fd("'", STDERR);
+// 			shell_state->return_code = 258;
+// 			return (0);
+// 		}
+// 		if (ft_is_types(token, "PE") && (!token->prev || !token->next
+// 				|| ft_is_types(token->prev, "TAIPE")))
+// 		{
+// 			ft_putstr_fd("mini: syntax error near unexpected token `", STDERR);
+// 			ft_putstr_fd(token->content, STDERR);
+// 			ft_putendl_fd("'", STDERR);
+// 			shell_state->return_code = 258;
+// 			return (0);
+// 		}
+// 		token = token->next;
+// 	}
+// 	return (1);
+// }
