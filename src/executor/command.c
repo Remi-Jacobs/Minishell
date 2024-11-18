@@ -6,7 +6,7 @@
 /*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 22:25:18 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/18 00:48:42 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/18 14:19:46 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_shell_state *shell_state)
 	return (ret);
 }
 
-// int	ft_magic_box(char *path, char **args, \
+// int	ft_magic_box(char *path, char **args, 
 // t_env_variable *env, t_shell_state *shell_state)
 // {
 // 	char	**env_array;
