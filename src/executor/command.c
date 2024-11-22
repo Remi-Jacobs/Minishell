@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 22:25:18 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/18 14:19:46 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/22 20:13:37 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_shell_state *shell_state)
 	if (g_global_sig.sigint_received == 1 || \
 	g_global_sig.sigquit_received == 1)
 		return (g_global_sig.last_exit_stat);
-	if (ret == 32256 || ret == 32512)
+	if (ret == 32256 || ret == 32512 || ret == 512)
 		ret = ret / 256;
 	else
 		ret = !!ret;
