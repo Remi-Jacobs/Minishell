@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 22:25:18 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/17 17:36:02 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/18 14:19:46 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			ft_error_message(char *path)
+int	ft_error_message(char *path)
 {
 	DIR	*folder;
 	int	fd;
@@ -40,52 +40,60 @@ int			ft_error_message(char *path)
 	return (ret);
 }
 
-int	ft_magic_box(char *path, char **args, t_env_variable *env, t_shell_state *shell_state)
+int	ft_magic_box(char *path, char **args, t_env_variable *env, \
+t_shell_state *shell_state)
 {
-	char	**env_array;
-	char	*env_string;
 	int		ret;
 
 	ret = SUCCESS;
 	g_global_sig.child_proc_id = fork();
-
-	if (g_global_sig.child_proc_id == 0)  // Child process
-	{
-		// Convert environment variables to a string format and split them into an array
-		env_string = ft_env_to_str(env);
-		env_array = ft_split(env_string, '\n');
-		ft_memdel(env_string);
-
-		// Execute command if the path contains a '/'
-		if (ft_strchr(path, '/') != NULL)
-			execve(path, args, env_array);
-
-		// Handle errors if execve fails
-		ret = ft_error_message(path);
-		ft_free_tab(env_array);
-		ft_free_token(shell_state->cmd_list);
-		exit(ret);  // Exit with the error code
-	}
-	else  // Parent process
-	{
-		// Wait for the child process to finish and retrieve its exit status
+	if (g_global_sig.child_proc_id == 0)
+		ft_execute_command(path, args, env, shell_state);
+	else
 		waitpid(g_global_sig.child_proc_id, &ret, 0);
-	}
-
-	// Check if a signal was received (SIGINT or SIGQUIT) and return the last exit status
-	if (g_global_sig.sigint_received == 1 || g_global_sig.sigquit_received == 1)
+	if (g_global_sig.sigint_received == 1 || \
+	g_global_sig.sigquit_received == 1)
 		return (g_global_sig.last_exit_stat);
-
-	// Normalize the return value based on specific codes
 	if (ret == 32256 || ret == 32512)
 		ret = ret / 256;
 	else
 		ret = !!ret;
-
 	return (ret);
 }
 
-char		*ft_path_join(const char *s1, const char *s2)
+// int	ft_magic_box(char *path, char **args, 
+// t_env_variable *env, t_shell_state *shell_state)
+// {
+// 	char	**env_array;
+// 	char	*env_string;
+// 	int		ret;
+
+// 	ret = SUCCESS;
+// 	g_global_sig.child_proc_id = fork();
+// 	if (g_global_sig.child_proc_id == 0)
+// 	{
+// 		env_string = ft_env_to_str(env);
+// 		env_array = ft_split(env_string, '\n');
+// 		ft_memdel(env_string);
+// 		if (ft_strchr(path, '/') != NULL)
+// 			execve(path, args, env_array);
+// 		ret = ft_error_message(path);
+// 		ft_free_tab(env_array);
+// 		ft_free_token(shell_state->cmd_list);
+// 		exit(ret);
+// 	}
+// 	else
+// 		waitpid(g_global_sig.child_proc_id, &ret, 0);
+// 	if (g_global_sig.sigint_received == 1 || g_global_sig.sigquit_received == 1)
+// 		return (g_global_sig.last_exit_stat);
+// 	if (ret == 32256 || ret == 32512)
+// 		ret = ret / 256;
+// 	else
+// 		ret = !!ret;
+// 	return (ret);
+// }
+
+char	*ft_path_join(const char *s1, const char *s2)
 {
 	char	*tmp;
 	char	*path;
@@ -96,7 +104,7 @@ char		*ft_path_join(const char *s1, const char *s2)
 	return (path);
 }
 
-char		*ft_check_dir(char *bin, char *command)
+char	*ft_check_dir(char *bin, char *command)
 {
 	DIR				*folder;
 	struct dirent	*item;
@@ -106,16 +114,18 @@ char		*ft_check_dir(char *bin, char *command)
 	folder = opendir(bin);
 	if (!folder)
 		return (NULL);
-	while ((item = readdir(folder)))
+	item = readdir(folder);
+	while (item != NULL)
 	{
 		if (ft_strcmp(item->d_name, command) == 0)
 			path = ft_path_join(bin, item->d_name);
+		item = readdir(folder);
 	}
 	closedir(folder);
 	return (path);
 }
 
-int			ft_exec_bin(char **args, t_env_variable *env, t_shell_state *shell_state)
+int	ft_exec_bin(char **args, t_env_variable *env, t_shell_state *shell_state)
 {
 	int		i;
 	char	**bin;
