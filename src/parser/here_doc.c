@@ -6,12 +6,11 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:45:39 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/22 20:31:57 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/23 19:01:34 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <termios.h>
 
 static void	ft_hd_sig_handler(int signal)
 {
@@ -55,15 +54,18 @@ void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
 	int		status;
 	pid_t	child_pid;
 
+	shell_state->here_doc_triggered = 1;
+	g_global_sig.print_prompt = 1;
 	if (!token)
 	{
 		write(2, "nothing in token\n", 18);
-		return ;
+		return;
 	}
 	delimiter = token->content;
 	child_pid = fork();
 	if (child_pid == 0)
 	{
+		// Child process for here-doc
 		temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (temp_fd == -1)
 		{
@@ -72,21 +74,34 @@ void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
 		}
 		ft_here_doc_routine(delimiter, temp_fd);
 		close(temp_fd);
-		exit(0);
+		exit(0); // Successful completion
 	}
 	else if (child_pid > 0)
 	{
+		// Parent process waits for child
 		waitpid(child_pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+
+		if (WIFSIGNALED(status)) // Child terminated by signal
 		{
-			shell_state->should_skip_exec = 1;
-			return ;
+			int	signal_code = WTERMSIG(status);
+			if (signal_code == SIGINT) // SIGINT specifically
+			{
+				shell_state->return_code = 130; // Set $? to 130
+				shell_state->should_skip_exec = 1;
+				return;
+			}
 		}
+		else if (WIFEXITED(status)) // Child exited normally
+		{
+			shell_state->return_code = WEXITSTATUS(status); // Use child's exit code
+		}
+
+		// Open temporary file for reading if no errors
 		shell_state->input_fd = open("here_doc", O_RDONLY);
 		if (shell_state->input_fd == -1)
 		{
 			perror("Error opening temporary file for here-doc");
-			return ;
+			return;
 		}
 		dup2(shell_state->input_fd, STDIN);
 		ft_close(shell_state->input_fd);
