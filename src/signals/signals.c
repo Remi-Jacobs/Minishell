@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 18:44:05 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/23 21:01:34 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	ft_sig_integer(int signal)
 	if (g_global_sig.child_proc_id == 0)
 	{
 		ft_putstr_fd("\b\b", STDERR);
-		ft_putstr_fd("\n", STDERR);
 		if (g_global_sig.print_prompt != 1)
 		{
+			ft_putstr_fd("\n", STDERR);
 			ft_putstr_fd("\033[0;36m\033[1m😎 minishell ▸ \033[0m", 1);
 			g_global_sig.print_prompt = 0;
 		}

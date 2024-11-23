@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:45:39 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 19:01:34 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/23 21:06:39 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,125 @@ static void	ft_here_doc_routine(char *delimiter, int temp_fd)
 	signal(SIGINT, SIG_DFL);
 }
 
+// static void ft_here_doc_parent(t_shell_state *shell_state, pid_t child_pid, int status)
+// {
+// 	int signal_code;
+
+// 	waitpid(child_pid, &status, 0);
+
+// 	if (WIFSIGNALED(status))
+// 	{
+// 		signal_code = WTERMSIG(status);
+// 		if (signal_code == SIGINT)
+// 		{
+// 			shell_state->return_code = 130;
+// 			shell_state->should_skip_exec = 1;
+// 			return ;
+// 		}
+// 	}
+// 	else if (WIFEXITED(status))
+// 		shell_state->return_code = WEXITSTATUS(status);
+// 	shell_state->input_fd = open("here_doc", O_RDONLY);
+// 	if (shell_state->input_fd == -1)
+// 	{
+// 		perror("Error opening temporary file for here-doc");
+// 		return ;
+// 	}
+// 	dup2(shell_state->input_fd, STDIN);
+// 	ft_close(shell_state->input_fd);
+// }
+
+// void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
+// {
+// 	char	*delimiter;
+// 	int		temp_fd;
+// 	int		status;
+// 	pid_t	child_pid;
+
+// 	g_global_sig.print_prompt = 1;
+// 	delimiter = token->content;
+// 	child_pid = fork();
+// 	if (child_pid == 0)
+// 	{
+// 		temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+// 		if (temp_fd == -1)
+// 		{
+// 			perror("Error creating temporary file for here-doc");
+// 			exit(1);
+// 		}
+// 		ft_here_doc_routine(delimiter, temp_fd);
+// 		close(temp_fd);
+// 		exit(0);
+// 	}
+// 	else if (child_pid > 0)
+// 	{
+// 		ft_here_doc_parent(shell_state, child_pid, &status);
+// 		// waitpid(child_pid, &status, 0);
+
+// 		// if (WIFSIGNALED(status))
+// 		// {
+// 		// 	int	signal_code = WTERMSIG(status);
+// 		// 	if (signal_code == SIGINT)
+// 		// 	{
+// 		// 		shell_state->return_code = 130;
+// 		// 		shell_state->should_skip_exec = 1;
+// 		// 		return ;
+// 		// 	}
+// 		// }
+// 		// else if (WIFEXITED(status))
+// 		// 	shell_state->return_code = WEXITSTATUS(status);
+// 		// shell_state->input_fd = open("here_doc", O_RDONLY);
+// 		// if (shell_state->input_fd == -1)
+// 		// {
+// 		// 	perror("Error opening temporary file for here-doc");
+// 		// 	return ;
+// 		// }
+// 		// dup2(shell_state->input_fd, STDIN);
+// 		// ft_close(shell_state->input_fd);
+// 	}
+// 	else
+// 		perror("Error forking here-doc process");
+// }
+
+static void	ft_here_doc_parent(t_shell_state *shell_state, pid_t child_pid)
+{
+	int	signal_code;
+	int	status;
+
+	waitpid(child_pid, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		signal_code = WTERMSIG(status);
+		if (signal_code == SIGINT)
+		{
+			shell_state->return_code = 130;
+			shell_state->should_skip_exec = 1;
+			return ;
+		}
+	}
+	else if (WIFEXITED(status))
+		shell_state->return_code = WEXITSTATUS(status);
+	shell_state->input_fd = open("here_doc", O_RDONLY);
+	if (shell_state->input_fd == -1)
+	{
+		perror("Error opening temporary file for here-doc");
+		return ;
+	}
+	dup2(shell_state->input_fd, STDIN_FILENO);
+	ft_close(shell_state->input_fd);
+}
+
 void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
 {
 	char	*delimiter;
 	int		temp_fd;
-	int		status;
 	pid_t	child_pid;
 
-	shell_state->here_doc_triggered = 1;
 	g_global_sig.print_prompt = 1;
-	if (!token)
-	{
-		write(2, "nothing in token\n", 18);
-		return;
-	}
 	delimiter = token->content;
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		// Child process for here-doc
 		temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (temp_fd == -1)
 		{
@@ -74,40 +174,10 @@ void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
 		}
 		ft_here_doc_routine(delimiter, temp_fd);
 		close(temp_fd);
-		exit(0); // Successful completion
+		exit(0);
 	}
 	else if (child_pid > 0)
-	{
-		// Parent process waits for child
-		waitpid(child_pid, &status, 0);
-
-		if (WIFSIGNALED(status)) // Child terminated by signal
-		{
-			int	signal_code = WTERMSIG(status);
-			if (signal_code == SIGINT) // SIGINT specifically
-			{
-				shell_state->return_code = 130; // Set $? to 130
-				shell_state->should_skip_exec = 1;
-				return;
-			}
-		}
-		else if (WIFEXITED(status)) // Child exited normally
-		{
-			shell_state->return_code = WEXITSTATUS(status); // Use child's exit code
-		}
-
-		// Open temporary file for reading if no errors
-		shell_state->input_fd = open("here_doc", O_RDONLY);
-		if (shell_state->input_fd == -1)
-		{
-			perror("Error opening temporary file for here-doc");
-			return;
-		}
-		dup2(shell_state->input_fd, STDIN);
-		ft_close(shell_state->input_fd);
-	}
+		ft_here_doc_parent(shell_state, child_pid);
 	else
-	{
 		perror("Error forking here-doc process");
-	}
 }

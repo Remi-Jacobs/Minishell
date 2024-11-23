@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 18:26:15 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/23 22:13:18 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	ft_parse_input(t_shell_state *shell_state)
 
 	signal(SIGINT, &ft_sig_integer);
 	signal(SIGQUIT, &ft_sig_exit);
-	if (shell_state->return_code && shell_state->return_code != 130)
+	if (shell_state->return_code)
 		ft_putstr_fd("🤬 ", STDERR);
 	else
 		ft_putstr_fd("😎 ", STDERR);
