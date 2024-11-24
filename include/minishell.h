@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/18 00:39:17 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/23 19:03:17 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_sig_handler
 	int				sigint_received;
 	int				sigquit_received;
 	int				last_exit_stat;
+	int				print_prompt;
 	pid_t			child_proc_id;
 }				t_sig_handler;
 

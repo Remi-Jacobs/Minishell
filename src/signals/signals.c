@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/17 17:37:33 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/24 18:26:00 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,15 @@ void	ft_sig_integer(int signal)
 	if (g_global_sig.child_proc_id == 0)
 	{
 		ft_putstr_fd("\b\b", STDERR);
-		ft_putstr_fd("\n", STDERR);
-		ft_putstr_fd("\033[0;36m\033[1m😎 minishell ▸ \033[0m", STDERR);
-		g_global_sig.last_exit_stat = 1;
+		if (g_global_sig.print_prompt != 1)
+		{
+			g_global_sig.print_prompt = 0;
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			ft_putstr_fd("\n", STDERR);
+			rl_redisplay();
+		}
+		g_global_sig.last_exit_stat = 130;
 	}
 	else
 	{
@@ -53,4 +59,5 @@ void	ft_sig_init(void)
 	g_global_sig.sigquit_received = 0;
 	g_global_sig.child_proc_id = 0;
 	g_global_sig.last_exit_stat = 0;
+	g_global_sig.print_prompt = 0;
 }

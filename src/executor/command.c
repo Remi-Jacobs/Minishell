@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 22:25:18 by ojacobs           #+#    #+#             */
-/*   Updated: 2024/11/18 14:19:46 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/23 19:02:32 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ int	ft_error_message(char *path)
 	return (ret);
 }
 
-int	ft_magic_box(char *path, char **args, t_env_variable *env, \
-t_shell_state *shell_state)
+int	ft_magic_box(char *path, char **args, t_env_variable *env,
+	t_shell_state *shell_state)
 {
 	int		ret;
 
@@ -51,10 +51,10 @@ t_shell_state *shell_state)
 		ft_execute_command(path, args, env, shell_state);
 	else
 		waitpid(g_global_sig.child_proc_id, &ret, 0);
-	if (g_global_sig.sigint_received == 1 || \
-	g_global_sig.sigquit_received == 1)
+	if (g_global_sig.sigint_received == 1
+		|| g_global_sig.sigquit_received == 1)
 		return (g_global_sig.last_exit_stat);
-	if (ret == 32256 || ret == 32512)
+	if (ret == 32256 || ret == 32512 || ret == 512)
 		ret = ret / 256;
 	else
 		ret = !!ret;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/17 20:02:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/23 20:31:01 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 {
 	while (token)
 	{
-		if (ft_is_types(token, "TAI")
+		if (ft_is_types(token, "TAIH")
 			&& (!token->next || ft_is_types(token->next, "TAIPE")))
 		{
 			ft_putstr_fd("mini: syntax error near unexpected token `", STDERR);
@@ -88,7 +88,7 @@ int	ft_check_line(t_shell_state *shell_state, t_cmd_token *token)
 			else
 				ft_putstr_fd("newline", STDERR);
 			ft_putendl_fd("'", STDERR);
-			shell_state->return_code = 258;
+			shell_state->return_code = 2;
 			return (0);
 		}
 		if (!ft_check_syntax_error(shell_state, token, "PE", "TAIPE"))
