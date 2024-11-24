@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 21:01:34 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/24 18:26:00 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ void	ft_sig_integer(int signal)
 		ft_putstr_fd("\b\b", STDERR);
 		if (g_global_sig.print_prompt != 1)
 		{
-			ft_putstr_fd("\n", STDERR);
-			ft_putstr_fd("\033[0;36m\033[1m😎 minishell ▸ \033[0m", 1);
 			g_global_sig.print_prompt = 0;
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			ft_putstr_fd("\n", STDERR);
+			rl_redisplay();
 		}
 		g_global_sig.last_exit_stat = 130;
 	}
