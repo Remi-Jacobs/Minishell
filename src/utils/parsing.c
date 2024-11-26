@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:29:22 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 20:31:01 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/26 14:50:08 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_quotes(char *line, int index)
 
 	i = 0;
 	open = 0;
-	while (line[i] && i != index)
+	while (line[i] && i != index && (index == 2147483647 || i < index))
 	{
 		if (i > 0 && line[i - 1] == '\\')
 			;

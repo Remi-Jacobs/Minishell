@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/24 18:25:24 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/26 16:29:42 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,7 @@ static void	ft_par2(t_shell_state *shell_state, char *line)
 	else
 		shell_state->return_code = shell_state->return_code;
 	if (ft_quote_check(shell_state, &line))
-	{
-		ft_memdel(line);
 		return ;
-	}
 	line = ft_space_line(line);
 	if (line && line[0] == '$')
 		line[0] = (char)(-line[0]);

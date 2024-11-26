@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 19:44:42 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/17 19:52:36 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/26 16:17:18 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 int	ft_is_type(t_cmd_token *token, int type)
 {
-	if (token && token->type == type)
+	if (!token)
+		return (0);
+	if (token->type == type)
 		return (1);
 	else
 		return (0);
@@ -22,6 +24,8 @@ int	ft_is_type(t_cmd_token *token, int type)
 
 int	ft_is_types(t_cmd_token *token, char *types)
 {
+	if (!token || !types)
+		return (0);
 	if (ft_strchr(types, ' ') && ft_is_type(token, EMPTY))
 		return (1);
 	else if (ft_strchr(types, 'X') && ft_is_type(token, CMD))

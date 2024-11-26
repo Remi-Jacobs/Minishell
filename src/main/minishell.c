@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 21:38:25 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/26 16:43:16 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,11 @@ static void	ft_init_shell(t_shell_state	*shell_state)
 {
 	shell_state->stdin_fd = dup(STDIN);
 	shell_state->stdout_fd = dup(STDOUT);
+	shell_state->active_env = NULL;
+	shell_state->secret_env = NULL;
+	shell_state->cmd_list = NULL;
+	shell_state->tilde = NULL;
+	shell_state->is_foreground = 0;
 	shell_state->should_exit = 0;
 	shell_state->return_code = 0;
 	shell_state->should_skip_exec = 0;
@@ -144,7 +149,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_token(shell_state.cmd_list);
 	}
 	ft_free_history(shell_state);
-	ft_free_env(shell_state.active_env);
+	if (shell_state.active_env)
+		ft_free_env(shell_state.active_env);
 	ft_free_env(shell_state.secret_env);
 	ft_memdel(shell_state.tilde);
 	return (shell_state.return_code);
