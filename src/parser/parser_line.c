@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/26 16:29:42 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/26 21:07:58 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,12 @@ int	ft_quote_check(t_shell_state *shell_state, char **line)
 		ft_putendl_fd("syntax error with open quotes", STDERR);
 		ft_memdel(*line);
 		shell_state->return_code = 2;
-		shell_state->active_env = NULL;
 		return (1);
 	}
 	return (0);
 }
 
-static void	ft_par2(t_shell_state *shell_state, char *line)
+static int	ft_par2(t_shell_state *shell_state, char *line)
 {
 	t_cmd_token	*token;
 
@@ -82,8 +81,8 @@ static void	ft_par2(t_shell_state *shell_state, char *line)
 		shell_state->return_code = g_global_sig.last_exit_stat;
 	else
 		shell_state->return_code = shell_state->return_code;
-	if (ft_quote_check(shell_state, &line))
-		return ;
+	if (ft_quote_check(shell_state, &line) == 1)
+		return (1);
 	line = ft_space_line(line);
 	if (line && line[0] == '$')
 		line[0] = (char)(-line[0]);
@@ -97,9 +96,10 @@ static void	ft_par2(t_shell_state *shell_state, char *line)
 			ft_type_arg(token, 0);
 		token = token->next;
 	}
+	return (0);
 }
 
-void	ft_parse_input(t_shell_state *shell_state)
+int	ft_parse_input(t_shell_state *shell_state)
 {
 	char		*line;
 
@@ -114,13 +114,15 @@ void	ft_parse_input(t_shell_state *shell_state)
 	{
 		shell_state->should_exit = 1;
 		ft_putendl_fd("exit", STDERR);
-		return ;
+		return (1);
 	}
 	if (*line)
 	{
 		add_history(line);
 		ft_my_add_history(line, shell_state);
 	}
-	ft_par2(shell_state, line);
+	if (ft_par2(shell_state, line) == 1)
+		return (1);
 	shell_state->here_doc_triggered = 0;
+	return (0);
 }

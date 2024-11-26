@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 20:56:48 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/26 16:43:16 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/26 20:35:44 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,8 @@ int	main(int argc, char **argv, char **envp)
 	while (shell_state.should_exit == 0)
 	{
 		ft_sig_init();
-		ft_parse_input(&shell_state);
+		if (ft_parse_input(&shell_state) == 1)
+			continue ;
 		if (shell_state.cmd_list != NULL
 			&& ft_check_line(&shell_state, shell_state.cmd_list))
 			ft_mini_shell(&shell_state);

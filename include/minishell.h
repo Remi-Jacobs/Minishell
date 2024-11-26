@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/23 19:03:17 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/26 20:37:03 by ojacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ char		*ft_expansions(char *arg, t_env_variable *env, int ret);
 char		*ft_space_alloc(char *line);
 char		*ft_space_line(char *line);
 int			ft_quote_check(t_shell_state *shell_state, char **line);
-void		ft_parse_input(t_shell_state *shell_state);
+int			ft_parse_input(t_shell_state *shell_state);
 
 void		ft_type_arg(t_cmd_token *token, int separator);
 void		ft_squish_args(t_shell_state *shell_state);
