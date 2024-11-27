@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 15:45:39 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/27 16:58:22 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/27 21:42:24 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ static void	ft_here_doc_parent(t_shell_state *shell_state, pid_t child_pid)
 	}
 	else if (WIFEXITED(status))
 		shell_state->return_code = WEXITSTATUS(status);
-	shell_state->input_fd = open("here_doc", O_RDONLY);
+	shell_state->input_fd = open("libft/o", O_RDONLY);
 	if (shell_state->input_fd == -1)
 	{
 		perror("Error opening temporary file for here-doc");
@@ -179,7 +179,7 @@ void	ft_here_doc(t_shell_state *shell_state, t_cmd_token *token)
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		temp_fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		temp_fd = open("libft/o", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (temp_fd == -1)
 		{
 			perror("Error creating temporary file for here-doc");
