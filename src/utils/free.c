@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 19:37:29 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/07 16:28:47 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/27 16:59:03 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,13 @@ int	ft_clear(void)
 {
 	write(STDOUT, "\033[H\033[J", 6);
 	return (0);
+}
+
+char	*ft_handle_expansion(const char *input_line,
+	int *i, t_shell_state *shell_state)
+{
+	if (input_line[*i] == '$' && input_line[*i + 1]
+		&& ft_isalpha(input_line[*i + 1]))
+		return (ft_expand_variable(input_line, i, shell_state));
+	return (ft_expand_character(input_line[*i]));
 }

@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:58:58 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/17 19:02:20 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/26 14:13:35 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_is_valid_env(const char *env)
 		return (0);
 	while (env[i] && env[i] != '=')
 	{
-		if (ft_isalnum(env[i]) == 0)
+		if (ft_is_env_char(env[i]) == 0)
 			return (-1);
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 20:44:20 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/17 18:38:50 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/27 17:01:23 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,43 @@ t_env_variable *env, int ret)
 	{
 		if (arg[data->dest_index - 1] != '?')
 			data->dest_index++;
+	}
+}
+
+char	*ft_expand_variable(const char *input_line,
+	int *index, t_shell_state *shell_state)
+{
+	int		start;
+	char	*var_name;
+	char	*var_value;
+
+	start = *index + 1;
+	while (input_line[*index + 1] && (ft_isalnum(input_line[*index + 1])
+			|| input_line[*index + 1] == '_'))
+		(*index)++;
+	var_name = ft_substr(input_line, start, *index - start + 1);
+	var_value = ft_getenv(var_name, shell_state->active_env);
+	free(var_name);
+	if (var_value)
+		ft_strdup(var_value);
+	else
+		ft_strdup("");
+	return (var_value);
+}
+
+void	ft_handle_delimited_warning(char *delimiter)
+{
+	char	*warning_msg;
+
+	warning_msg = ft_strjoin("minishell: warning: \
+	here-doc delimited by end-of-file (wanted `", delimiter);
+	if (!warning_msg)
+		return ;
+	warning_msg = ft_strjoin_free(warning_msg, "`)\n");
+	if (warning_msg)
+	{
+		ft_putstr_fd(warning_msg, STDERR_FILENO);
+		free(warning_msg);
 	}
 }
 

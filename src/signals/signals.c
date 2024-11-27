@@ -6,15 +6,15 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 20:00:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/24 18:26:00 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/27 18:12:37 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_sig_integer(int signal)
+void	ft_sig_integer(int sig_nal)
 {
-	(void)signal;
+	(void)sig_nal;
 	if (g_global_sig.child_proc_id == 0)
 	{
 		ft_putstr_fd("\b\b", STDERR);
@@ -36,11 +36,11 @@ void	ft_sig_integer(int signal)
 	g_global_sig.sigint_received = 1;
 }
 
-void	ft_sig_exit(int signal)
+void	ft_sig_exit(int sig_nal)
 {
 	char	*nbr;
 
-	nbr = ft_itoa(signal);
+	nbr = ft_itoa(sig_nal);
 	if (g_global_sig.child_proc_id != 0)
 	{
 		ft_putstr_fd("Quit:", STDERR);

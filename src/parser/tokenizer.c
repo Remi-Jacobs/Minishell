@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:23:49 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/18 00:24:31 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/26 14:46:57 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,34 +131,3 @@ t_cmd_token	*ft_get_tokens(char *line)
 	}
 	return (ft_finalize_token_list(next));
 }
-
-// t_cmd_token	*ft_get_tokens(char *line)
-// {
-// 	t_cmd_token	*prev;
-// 	t_cmd_token	*next;
-// 	int			i;
-// 	int			sep;
-
-// 	prev = NULL;
-// 	next = NULL;
-// 	i = 0;
-// 	ft_skip_spacenl(line, &i);
-// 	while (line[i])
-// 	{
-// 		sep = ft_ignore_sep(line, i);
-// 		next = ft_next_token(line, &i);
-// 		if (!next)
-// 			return (NULL);
-// 		next->prev = prev;
-// 		if (prev)
-// 			prev->next = next;
-// 		prev = next;
-// 		ft_type_arg(next, sep);
-// 		ft_skip_spacenl(line, &i);
-// 	}
-// 	if (next)
-// 		next->next = NULL;
-// 	while (next && next->prev)
-// 		next = next->prev;
-// 	return (next);
-// }
