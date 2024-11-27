@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/26 20:37:03 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/27 16:59:57 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,9 @@ int			ft_unset(char **args, t_shell_state *state);
 ** PARSING
 */
 char		*ft_expansions(char *arg, t_env_variable *env, int ret);
+void		ft_handle_delimited_warning(char *delimiter);
+char		*ft_expand_variable(const char *input_line,
+				int *index, t_shell_state *shell_state);
 
 char		*ft_space_alloc(char *line);
 char		*ft_space_line(char *line);
@@ -154,7 +157,6 @@ void		ft_squish_args(t_shell_state *shell_state);
 int			ft_next_alloc(char *line, int *i);
 t_cmd_token	*ft_next_token(char *line, int *i);
 t_cmd_token	*ft_get_tokens(char *line);
-void		ft_here_doc(t_shell_state *shell_state, t_cmd_token *token);
 void		ft_squish_helper(t_shell_state *shell_state,
 				t_cmd_token *token, t_cmd_token *prev);
 t_cmd_token	*ft_finalize_token_list(t_cmd_token *last_token);
@@ -212,9 +214,7 @@ void		ft_sig_init(void);
 */
 int			ft_is_type(t_cmd_token *token, int type);
 int			ft_is_types(t_cmd_token *token, char *types);
-int			ft_has_type(t_cmd_token *token, int type);
 int			ft_has_pipe(t_cmd_token *token);
-t_cmd_token	*ft_next_type(t_cmd_token *token, int type, int skip);
 
 t_cmd_token	*ft_next_sep(t_cmd_token *token, int skip);
 t_cmd_token	*ft_prev_sep(t_cmd_token *token, int skip);
@@ -235,6 +235,9 @@ void		ft_close(int fd);
 void		ft_reset_std(t_shell_state *shell_state);
 void		ft_close_fds(t_shell_state *shell_state);
 void		ft_reset_fds(t_shell_state *shell_state);
+char		*ft_expand_character(char c);
+char		*ft_handle_expansion(const char *input_line,
+				int *i, t_shell_state *shell_state);
 
 int			ft_ret_size(int ret);
 int			ft_get_var_len(const char *arg, int pos,
@@ -251,6 +254,17 @@ int			ft_execute_command(char *path, char **args, t_env_variable *env, \
 void		ft_my_add_history(const char *command, t_shell_state *shell_state);
 int			ft_print_history(t_shell_state *shell_state);
 void		ft_free_history(t_shell_state shell_state);
+
+/*
+** HERE_DOC AND UTILS
+*/
+void		ft_here_doc(t_shell_state *shell_state, t_cmd_token *token);
+void		ft_hd_sig_handler(int signal);
+char		*ft_strrstr(const char *haystack, const char *needle);
+char		*ft_getenv(const char *var_name, t_env_variable *env);
+char		*ft_strjoin_free(char *s1, const char *s2);
+int			ft_is_quoted_delimiter(char *delimiter, t_shell_state *shell_state);
+
 /*
 ** External functions
 */
