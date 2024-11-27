@@ -6,15 +6,15 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 14:10:24 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/27 15:23:36 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/27 18:13:05 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_hd_sig_handler(int signal)
+void	ft_hd_sig_handler(int sig_nal)
 {
-	(void)signal;
+	(void)sig_nal;
 	write(2, "\n", 1);
 	exit(130);
 }

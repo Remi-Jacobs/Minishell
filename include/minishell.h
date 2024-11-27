@@ -6,7 +6,7 @@
 /*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:45 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/27 16:59:57 by dsamuel          ###   ########.fr       */
+/*   Updated: 2024/11/27 18:14:55 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,8 +205,8 @@ int			ft_mini_pipe(t_shell_state *shell_state);
 /*
 ** SIGNALS HANDLING
 */
-void		ft_sig_integer(int signal);
-void		ft_sig_exit(int signal);
+void		ft_sig_integer(int sig_nal);
+void		ft_sig_exit(int sig_nal);
 void		ft_sig_init(void);
 
 /*
@@ -259,7 +259,7 @@ void		ft_free_history(t_shell_state shell_state);
 ** HERE_DOC AND UTILS
 */
 void		ft_here_doc(t_shell_state *shell_state, t_cmd_token *token);
-void		ft_hd_sig_handler(int signal);
+void		ft_hd_sig_handler(int sig_nal);
 char		*ft_strrstr(const char *haystack, const char *needle);
 char		*ft_getenv(const char *var_name, t_env_variable *env);
 char		*ft_strjoin_free(char *s1, const char *s2);

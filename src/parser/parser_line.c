@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojacobs <ojacobs@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 21:15:14 by dsamuel           #+#    #+#             */
-/*   Updated: 2024/11/26 21:07:58 by ojacobs          ###   ########.fr       */
+/*   Updated: 2024/11/27 18:18:45 by dsamuel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int	ft_parse_input(t_shell_state *shell_state)
 
 	signal(SIGINT, &ft_sig_integer);
 	signal(SIGQUIT, &ft_sig_exit);
+	signal(SIGQUIT, SIG_IGN);
 	if (shell_state->return_code)
 		ft_putstr_fd("🤬 ", STDERR);
 	else
@@ -113,8 +114,7 @@ int	ft_parse_input(t_shell_state *shell_state)
 	if (!line)
 	{
 		shell_state->should_exit = 1;
-		ft_putendl_fd("exit", STDERR);
-		return (1);
+		return (ft_putendl_fd("exit", STDERR), 1);
 	}
 	if (*line)
 	{

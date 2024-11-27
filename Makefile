@@ -6,7 +6,7 @@
 #    By: dsamuel <dsamuel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/09 19:43:40 by dsamuel           #+#    #+#              #
-#    Updated: 2024/11/27 15:30:06 by dsamuel          ###   ########.fr        #
+#    Updated: 2024/11/27 18:08:39 by dsamuel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,5 +82,8 @@ re: fclean all
 
 test: all
 	./minishell
+
+leak: re
+	valgrind --leak-check=full ./minishell
 
 .PHONY: clean fclean re test norm
